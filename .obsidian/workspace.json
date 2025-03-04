@@ -11,14 +11,12 @@
             "id": "6c2e11aacc39cb85",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
-                "mode": "source",
-                "source": false
+                "file": "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf"
               },
-              "icon": "lucide-file",
-              "title": "Neuralangelo High-Fidelity Neural Surface Reconstruction"
+              "icon": "lucide-file-text",
+              "title": "001_LERF Language Embedded Radiance Fields"
             }
           }
         ]
@@ -170,8 +168,8 @@
   },
   "active": "6c2e11aacc39cb85",
   "lastOpenFiles": [
-    "Paper Review/Semantic/Untitled.md",
     "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
+    "Paper Review/Semantic/Untitled.md",
     "Paper Review/신입생세미나/053_Neuralangelo High-Fidelity Neural Surface Reconstruction.pdf",
     "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf",
     "Untitled.canvas",
