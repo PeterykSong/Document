@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "5b784c9f3824bd74",
+        "id": "d869bf945b4e2502",
         "type": "tabs",
         "children": [
           {
-            "id": "e975a0588a914cc4",
+            "id": "6c2e11aacc39cb85",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Neuralangelo High-Fidelity Neural Surface Reconstruction"
             }
           }
         ]
@@ -90,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "2025-03-04.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for 2025-03-04"
             }
           },
           {
@@ -108,11 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "2025-03-04.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from 2025-03-04"
             }
           },
           {
@@ -136,12 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "2025-03-04.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of 2025-03-04"
             }
           }
         ]
@@ -161,16 +168,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "e975a0588a914cc4",
+  "active": "6c2e11aacc39cb85",
   "lastOpenFiles": [
+    "Paper Review/Semantic/Untitled.md",
+    "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
+    "Paper Review/신입생세미나/053_Neuralangelo High-Fidelity Neural Surface Reconstruction.pdf",
+    "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf",
+    "Untitled.canvas",
+    "Paper Review/Semantic",
+    "Paper Review/신입생세미나",
+    "Untitled 1",
+    "Paper Review",
+    "해야할일들.md",
+    "2025-03-04.md",
     "Document/Paper review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
-    "053_Neuralangelo High-Fidelity Neural Surface Reconstruction.pdf",
     "Document/Paper review/LERF Language Embedded Radiance Fields.md",
     "Document/Paper review/신입생세미나",
-    "001_LERF Language Embedded Radiance Fields.pdf",
-    "2025-03-04.md",
-    "Untitled.canvas",
-    "해야할일들.md",
     "Document/Work Plan",
     "Document/Paper review"
   ]
