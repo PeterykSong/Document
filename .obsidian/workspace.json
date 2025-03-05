@@ -4,19 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "d869bf945b4e2502",
+        "id": "05a08d7838fd4eb2",
         "type": "tabs",
         "children": [
           {
-            "id": "6c2e11aacc39cb85",
+            "id": "d7ea544343db2b5d",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "001_LERF Language Embedded Radiance Fields"
+                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -38,11 +38,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical",
-                "autoReveal": false
-              },
-              "icon": "lucide-folder-closed",
-              "title": "Files"
+                "sortOrder": "alphabetical"
+              }
             }
           },
           {
@@ -57,9 +54,7 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              },
-              "icon": "lucide-search",
-              "title": "Search"
+              }
             }
           },
           {
@@ -67,9 +62,7 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {},
-              "icon": "lucide-bookmark",
-              "title": "Bookmarks"
+              "state": {}
             }
           }
         ]
@@ -92,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2025-03-04.md",
+                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,9 +93,7 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              },
-              "icon": "links-coming-in",
-              "title": "Backlinks for 2025-03-04"
+              }
             }
           },
           {
@@ -111,12 +102,10 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2025-03-04.md",
+                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "Outgoing links from 2025-03-04"
+              }
             }
           },
           {
@@ -126,12 +115,8 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-tags",
-              "title": "Tags"
+                "useHierarchy": true
+              }
             }
           },
           {
@@ -140,13 +125,8 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2025-03-04.md",
-                "followCursor": false,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-list",
-              "title": "Outline of 2025-03-04"
+                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md"
+              }
             }
           }
         ]
@@ -166,23 +146,25 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6c2e11aacc39cb85",
+  "active": "d7ea544343db2b5d",
   "lastOpenFiles": [
+    "Paper Review/신입생세미나/Neuralangelo.pptx",
+    "Paper Review/신입생세미나/052_3D Gaussian Splatting for Real-Time Radiance Field Rendering.pdf",
+    "Paper Review/신입생세미나/051_NeRF Representing Scenes as Neural Radiance Fields for View Synthesis.pdf",
+    "Paper Review/신입생세미나/043_graph-SLAM.pdf",
+    "Paper Review/신입생세미나/042_EKF_SLAM.pdf",
+    "Paper Review/신입생세미나/041_SLAM-tutorial-II.pdf",
+    "Paper Review/신입생세미나/041_SLAM-tutorial-I.pdf",
+    "Paper Review/신입생세미나/033_Direct Sparse Odometry.pdf",
+    "Paper Review/신입생세미나/032_SFM_Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.pdf",
+    "Paper Review/신입생세미나/031_ORB SLAM.pdf",
+    "Paper Review/신입생세미나/023_LOAM.pdf",
     "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
     "Paper Review/Semantic/Untitled.md",
-    "Paper Review/신입생세미나/053_Neuralangelo High-Fidelity Neural Surface Reconstruction.pdf",
-    "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf",
     "Untitled.canvas",
-    "Paper Review/Semantic",
-    "Paper Review/신입생세미나",
-    "Untitled 1",
-    "Paper Review",
     "해야할일들.md",
     "2025-03-04.md",
     "Document/Paper review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
-    "Document/Paper review/LERF Language Embedded Radiance Fields.md",
-    "Document/Paper review/신입생세미나",
-    "Document/Work Plan",
-    "Document/Paper review"
+    "Document/Paper review/LERF Language Embedded Radiance Fields.md"
   ]
 }
