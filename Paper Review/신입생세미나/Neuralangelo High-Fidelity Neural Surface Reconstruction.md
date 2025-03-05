@@ -11,6 +11,10 @@ Neuralangelo는 다음의 두 가지 핵심 기술을 활용합니다:
 
 이 방법은 깊이(depth) 등의 보조 데이터 없이 RGB 영상만으로 고밀도의 3D 표면을 재구성할 수 있으며, 기존 방법보다 훨씬 높은 충실도를 보장합니다. 실험 결과, Neuralangelo는 DTU 데이터셋과 Tanks and Temples 데이터셋에서 이전 방법들보다 더 높은 정확도를 보이며, 3D 장면을 더 세밀하게 복원할 수 있음을 증명하였습니다.
 
+참고자료 : https://www.bucketplace.com/post/2023-08-16-neural-rendering-%EA%B0%9C%EB%B0%9C-%EC%9D%B4%EC%95%BC%EA%B8%B0-2-%EA%B3%B5%EA%B0%84%EC%9D%98-%EC%8B%9C%EA%B0%81%ED%99%94/
+          https://www.bucketplace.com/post/2023-08-10-neural-rendering-%EA%B0%9C%EB%B0%9C-%EC%9D%B4%EC%95%BC%EA%B8%B0-1-%EA%B3%B5%EA%B0%84%EC%9D%98-%EA%B8%B0%EB%A1%9D/
+
+
 # 2. 용어
 
 - **뉴럴 표면 재구성(Neural Surface Reconstruction)**
@@ -20,7 +24,8 @@ Neuralangelo는 다음의 두 가지 핵심 기술을 활용합니다:
 - **뉴럴 볼륨 렌더링(Neural Volume Rendering)**
     - 뉴럴 네트워크를 활용하여 3D 공간의 밀도와 색상을 학습하고 이를 기반으로 새로운 시점에서 이미지를 합성하는 기술.
     - 대표적인 기법으로 **NeRF (Neural Radiance Fields)** 가 있음.
--	**SDF, Signed Distance Function**
+
+- **SDF, Signed Distance Function**
     -  3D 공간의 각 점에서 표면까지의 부호가 있는 거리 값을 나타내는 함수.
     -  뉴럴 네트워크를 활용하여 장면을 암시적(implicit)으로 표현하는 데 사용됨.
     
@@ -42,6 +47,8 @@ Neuralangelo는 다음의 두 가지 핵심 기술을 활용합니다:
 - **PSNR (Peak Signal-to-Noise Ratio)**
     - 이미지 품질을 평가하는 지표로, 원본 이미지와 생성된 이미지의 차이를 수치적으로 평가.
     
+- 시점 합성 (View Synthesis)
+
 # 3. 주요 내용
 
 #### 1) 뉴럴 볼륨 렌더링 (Neural Volume Rendering)
