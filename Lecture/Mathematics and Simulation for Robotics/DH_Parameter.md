@@ -76,3 +76,5 @@ Modified: $a_{i-1}$, $α_{i-1}$가 이전 링크 기준. 좌표계는 링크 시
 안전성과 동작 계산의 기준점으로 사용.
 
 ![alt text](image.png)
+
+![alt text](image-1.png)
