@@ -78,3 +78,5 @@ Modified: $a_{i-1}$, $α_{i-1}$가 이전 링크 기준. 좌표계는 링크 시
 ![alt text](image.png)
 
 ![alt text](image-1.png)
+
+https://intelligentsystemslab.org.ntnu.no/course/DH/index.html
