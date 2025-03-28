@@ -1,4 +1,4 @@
-
+https://www.youtube.com/watch?v=XDSzbJAwJKA
 # 로봇팔의 DH 파라미터와 Zero Position 설명
 
 ## 1. DH 파라미터 표기법
