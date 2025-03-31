@@ -7,7 +7,7 @@
 |   LIO SAM   | 2020 | 2D+3D |             |     |
 | ScanContext | 2021 |  2D   | Voxel+SCD   |     |
 |  PIN SLAM   | 2024 | 2D+3D | Voxel+SDF   |     |
-|             |      |       |             |     |
+|  FAST-LOI2  | 2021 |  3D   | Point?      |     |
 
 
 # Particle filter (Fast SLAM)
@@ -64,7 +64,41 @@ Shan, Tixiao, et al. "Lio-sam: Tightly-coupled lidar inertial odometry via smoot
 
 # GMapping
 
+
 # Cartograper
+
+
+# FAST LIO2
+ - 문제의식
+	 - Building a dense 3-dimension (3D) map of an unknown environment in real-time and simultaneously localizing in the map (i.e., SLAM) is crucial for autonomous robots 
+	 - The central requirement for adopting LiDAR-based SLAM approaches to these widespread applications is to obtain accurate, low-latency state estimation and dense 3D map with limited onboard computation resource
+	 - the performance of the feature extraction module is easily influenced by the environment.
+	    if the LiDAR Field of View (FoV) is small, a typical phenomenon of emerging solid-state LiDARs [16].   
+	 -  LiDAR points are usually sampled sequentially while the sensor undergoes continuous motion. This procedure creates significant motion distortion influencing the perfor- mance of the odometry and mapping, especially when the motion is severe
+	 -  4) LiDAR usually has a long measuring range (e.g., hundreds of meters) but with quite low resolution between scanning lines in a scan. The resultant point cloud measurements are sparsely distributed in a large 3D space, necessitating a large and dense map to register these sparse points. 
+
+
+- 제안/접근법
+	- incremental k-d tree (ikd tree) and direct points registration.
+
+- 참고연구들
+	- LiDAR SLAM들
+		- Lego-LOAM : Ground Point Segmentation
+		- LOAM Livox : LOAM + SolidState LiDAR
+		- LION [28] : Loosely coupled IMU and LiDAR
+		- LILIOM [17] 
+		- LIO-SAM [30] requires a 9-axis IMU to produce attitude measurement as the prior of scan registration within a small local map
+		- LINS [31] introduces a tightly- coupled iterated Kalman filter and robocentric formula into  the LiDAR pose optimization in the odometry.
+		- FAST-LIO [22] introduces a formal back-propagation that precisely considers the sampling time of every single point in a scan and compensates the motion distortion via a rigorous kinematic model driven by IMU measurement
+		    - Kalman gain formula is used to reduce the computation complexity from the dimension of the measurements to the dimension of the state.
+	- Mapping
+		- kNN search problem can be solved by building spatial indices for data points, which can be divided into two categories: partitioning the data and splitting the space.
+		-  R-tree [37] which clusters the data into potential overlapped axis-aligned cuboids based on data proximity in space
+		- R∗-tree which outperforms the original ones [38].
+		- Octree [39] and k-dimensional tree (k-d tree) [40] are two well-known types of data structures to split the space for kNN search. 
+		- Mapping methods using k-d tree libraries, such as ANN [44], libnabo [43] and FLANN [45], fully re-build the k-d trees to update the map, which results in considerable computation. 
+
+
 
 https://www.youtube.com/watch?v=M-GWxY2L_Fs
 https://gsk1m.github.io/
