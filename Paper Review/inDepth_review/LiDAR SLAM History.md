@@ -103,6 +103,12 @@ Shan, Tixiao, et al. "Lio-sam: Tightly-coupled lidar inertial odometry via smoot
 https://www.youtube.com/watch?v=M-GWxY2L_Fs
 https://gsk1m.github.io/
 
+https://jml-note.tistory.com/entry/Graph-SLAM-with-Example-Code
+
+https://velog.io/@cjh1995-ros/SLAM-and-DL-Paper-Lists
+
+
+
 # 3월 목표 1: lidar slam history 정리
 
 
@@ -939,24 +945,1349 @@ Serafin, J., & Grisetti, G. (2015). NICP: Dense normal based point cloud registr
     - 계산 복잡도가 기존 ICP보다 높아 저사양 하드웨어에서는 부담.
 #### 18. 16 SSRR ICP-SLAM  
 
+E. P. Mendes, P. Koch, and S. Lacroix, "ICP-based pose-graph SLAM," in 2016 IEEE International Symposium on Safety, Security, and Rescue Robotics (SSRR), Lausanne, Switzerland, Oct. 2016, pp. 195-200, doi: 10.1109/SSRR.2016.7784297.
+
+1. 서론 (Introduction)
+
+- 배경: SLAM은 로봇이 미지의 환경에서 자신의 위치를 추정하고 동시에 환경 지도를 생성하는 기술로, 재난 구조 로봇(Safety, Security, Rescue Robotics)에서 특히 중요합니다. 그러나 LIDAR 기반 오도메트리는 시간이 지남에 따라 드리프트(누적 오차)가 발생하는 문제가 있음.
+    
+- 목적: 이 논문은 LIDAR 데이터를 활용한 ICP 알고리즘을 통해 정확한 포인트 클라우드 정합을 수행하고, 이를 포즈 그래프에 통합하여 드리프트를 줄이고 루프 클로징을 통해 전체 경로와 맵을 최적화하는 방법을 제안.
+    
+- 기여: 실시간 적용 가능성, 구조화되지 않은 환경에서의 견고성(robustness), 계산 효율성.
+    
+
+---
+
+2. 관련 연구 (Related Work)
+
+- SLAM의 주요 접근법:
+    
+    - 필터 기반: EKF(Extended Kalman Filter)나 Particle Filter 사용. 계산량이 많고 복잡한 환경에서 한계.
+        
+    - 그래프 기반: 포즈 그래프를 활용한 최적화 방식으로, 루프 클로징에 강점이 있음.
+        
+- ICP 알고리즘: 포인트 클라우드 정합에 널리 사용되며, 초기 추정값에 민감하지만 정확도가 높음.
+    
+- 기존 연구와의 차별점: 이 논문은 ICP를 오도메트리와 결합하고, 키프레임 기반 그래프를 통해 계산 부담을 줄임.
+    
+
+---
+
+3. 방법론 (Methodology)
+
+논문의 핵심 접근법은 세 단계로 나뉩니다: 오도메트리, 그래프 구축, 최적화.
+
+3.1. ICP 기반 오도메트리 (ICP-based Odometry)
+
+- 입력: 연속적인 LIDAR 스캔 데이터(2D 또는 3D 포인트 클라우드).
+    
+- 과정:
+    
+    1. 현재 스캔과 이전 스캔 간의 상대적 변환(Relative Transformation)을 ICP로 계산.
+        
+    2. ICP는 두 포인트 클라우드 간의 최근접점을 찾아 변환 행렬(회전 및 이동)을 최적화.
+        
+    3. 변환 결과를 누적하여 로봇의 이동 경로를 추정.
+        
+- 특징: 초기 추정값을 개선하기 위해 이전 프레임의 결과를 활용하며, 계산 속도를 위해 다운샘플링 적용.
+    
+
+3.2. 포즈 그래프 구축 (Pose Graph Construction)
+
+- 키프레임 정의: 모든 스캔을 사용하지 않고, 일정 거리나 각도 변화가 있을 때만 키프레임을 생성(메모리 효율성).
+    
+- 노드와 엣지:
+    
+    - 노드(Node): 각 키프레임에서의 로봇 포즈(위치와 방향).
+        
+    - 엣지(Edge): 인접 키프레임 간 ICP로 계산된 상대적 변환.
+        
+- 루프 클로징 탐지: 과거 키프레임과 현재 키프레임 간 유사성을 확인(예: Euclidean 거리나 특징 매칭)하여 루프를 식별.
+    
+
+3.3. 그래프 최적화 (Graph Optimization)
+
+- 목표: 오도메트리 드리프트를 보정하고 일관된 맵을 생성.
+    
+- 방법: 비선형 최소 제곱법(Non-linear Least Squares)을 사용해 포즈 그래프의 오류를 최소화.
+    
+- 루프 클로징 통합: 루프가 탐지되면 해당 엣지를 그래프에 추가하고 전체 경로를 재조정.
+    
+
+---
+
+4. 실험 (Experiments)
+
+- 데이터셋: 실내 및 실외 환경에서의 LIDAR 데이터(구체적인 데이터셋 이름은 명시되지 않음).
+    
+- 하드웨어: LIDAR 센서(예: Hokuyo UTM-30LX)와 로봇 플랫폼 사용.
+    
+- 결과:
+    
+    - 정확도: 순수 오도메트리 대비 드리프트가 약 50% 감소.
+        
+    - 속도: 실시간 처리 가능(초당 10Hz 이상).
+        
+    - 맵 품질: 루프 클로징 후 구조적 일관성 개선(예: 벽과 객체의 정렬).
+        
+- 비교: EKF-SLAM 및 순수 ICP 오도메트리와 비교해 더 나은 성능 확인.
+    
+
+---
+
+5. 논의 (Discussion)
+
+- 장점:
+    
+    - 계산 효율성: 키프레임 사용으로 메모리와 연산 부담 감소.
+        
+    - 견고성: 잡음이 많은 재난 환경에서도 안정적.
+        
+- 한계:
+    
+    - ICP의 초기 추정 의존성: 잘못된 초기값은 수렴 실패 가능성.
+        
+    - 루프 클로징 탐지의 민감도: 환경에 따라 누락될 수 있음.
+        
+- 개선 방향: 센서 융합(예: IMU 추가) 또는 더 강력한 루프 탐지 알고리즘 도입 제안.
+    
+
+---
+
+6. 결론 (Conclusion)
+
+- 이 접근법은 ICP 기반 오도메트리와 포즈 그래프 최적화를 결합하여 SLAM의 정확도와 효율성을 개선.
+    
+- 재난 구조 로봇과 같은 실시간 응용 분야에서 유용하며, 향후 다중 센서 통합으로 확장 가능.
+    
+
+---
+
+추가 참고
+
+- 알고리즘 의사 코드:
+    
+    ```text
+    1. Initialize pose graph G with first keyframe
+    2. For each new LIDAR scan:
+       a. Compute relative pose using ICP with previous scan
+       b. If keyframe criteria met:
+          - Add new node to G
+          - Add edge with ICP transformation
+       c. Check for loop closure with past keyframes
+       d. If loop detected, add loop edge to G
+    3. Optimize G using non-linear least squares
+    4. Output optimized trajectory and map
+    ```
+
+---
+
 #### 19. 18 RSS SuMa (projective view rendering)  
+Behley, J., & Stachniss, C. (2018). Efficient Surfel-Based SLAM using 3D Laser Range Data in Urban Environments. In 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) (pp. 5948-5955). IEEE.
+
+
+1. 배경 및 동기
+
+- 문제 정의:  
+    기존의 LiDAR 기반 SLAM 시스템은 계산 비용이 높거나 동적 환경에서 견고하지 못한 경우가 많았다. 특히, 도시 환경에서는 정적 구조물과 동적 객체(예: 차량, 보행자)가 혼재되어 있어 정확한 매핑과 위치 추정이 어려웠다.
+    
+- 제안:  
+    SuMa는 surfel(표면 요소)을 활용한 표현 방식을 도입하여, 메모리 효율성과 계산 속도를 높이고, 실시간으로 동작 가능한 SLAM 시스템을 구현하고자 했다.
+    
+
+---
+
+2. 주요 기여
+
+3. Surfel 기반 표현:
+    
+    - LiDAR 포인트 클라우드를 개별 점이 아닌 surfel(작은 원형 표면 요소)로 변환하여 환경을 모델링.
+        
+    - 각 surfel은 위치, 법선 벡터(normal vector), 반지름 등의 속성을 가지며, 이를 통해 메모리 사용량을 줄이고 효율적인 렌더링을 가능하게 함.
+        
+4. Projective Scan Matching:
+    
+    - 연속적인 LiDAR 스캔 간의 정합을 위해 projective data association을 사용.
+        
+    - 현재 스캔을 이전 맵에 투영(projection)하여 기하학적 일치성을 계산하며, 이를 통해 위치 추정의 정확도를 높임.
+        
+5. 실시간 성능:
+    
+    - GPU를 활용한 병렬 처리를 통해 실시간으로 매핑과 위치 추정을 수행.
+        
+    - KITTI 데이터셋에서 실험을 통해 실시간 동작 가능성을 입증.
+        
+6. 도시 환경에서의 견고성:
+    
+    - 복잡한 도시 환경에서도 drift(위치 추정 오류 누적)를 최소화하며 일관된 맵을 생성.
+        
+
+---
+
+3. 방법론
+
+3.1. 시스템 구조
+
+- 입력: 3D LiDAR 스캔(예: Velodyne HDL-64E에서 생성된 포인트 클라우드).
+    
+- 출력: 로봇의 6-DoF(자유도) 위치 추정과 surfel 기반 3D 맵.
+    
+
+3.2. Surfel 표현
+
+- 포인트 클라우드를 surfel로 변환:
+    
+    - 각 포인트에 대해 주변 점들을 분석해 법선 벡터를 계산하고, 이를 기반으로 surfel을 생성.
+        
+    - surfel은 환경의 표면을 근사적으로 표현하며, 개별 포인트보다 메모리 효율적.
+        
+- 맵 관리:
+    
+    - 오래된 surfel은 제거하고, 새로운 스캔 데이터를 기반으로 맵을 갱신.
+        
+
+3.3. 위치 추정
+
+- Projective Scan Matching:
+    
+    - 현재 LiDAR 스캔을 이전에 생성된 surfel 맵에 투영하여 정합 수행.
+        
+    - 최적화 문제로 변환하여 로봇의 위치(변환 행렬)를 추정.
+        
+    - 비용 함수: 투영된 포인트와 surfel 간의 기하학적 거리 최소화.
+        
+
+3.4. 루프 클로저(Loop Closure)
+
+- 키프레임(keyframe) 기반 루프 클로저를 도입.
+    
+- 이전에 방문한 위치를 인식하면, 글로벌 맵의 일관성을 유지하기 위해 위치 추정을 보정.
+    
+
+3.5. GPU 가속
+
+- surfel 렌더링과 scan matching을 GPU에서 병렬 처리하여 계산 속도를 높임.
+    
+
+---
+
+4. 실험 결과
+
+- 데이터셋: KITTI Odometry Benchmark
+    
+- 평가 지표:
+    
+    - 위치 추정 정확도(translation/rotation error).
+        
+    - 매핑 일관성 및 계산 시간.
+        
+- 결과:
+    
+    - KITTI 시퀀스에서 평균 translation error가 약 0.8% 수준으로, 당시의 최신 SLAM 방법론(예: LOAM)과 비교해 경쟁력 있는 성능을 보임.
+        
+    - 실시간 처리 속도: 약 10Hz 이상으로 동작(하드웨어 사양에 따라 다름).
+        
+    - 도시 환경에서 drift가 적고, 복잡한 구조물(건물, 도로 등)을 잘 표현.
+        
+
+---
+
+5. 한계
+
+- 동적 객체 처리 부족:  
+    SuMa는 동적 객체(움직이는 차량, 사람 등)를 명시적으로 처리하지 않음. 이로 인해 동적 환경에서 오류가 발생할 가능성 있음.
+    
+- 시맨틱 정보 부재:  
+    기하학적 정보만 사용하므로, 환경의 의미적 이해(예: 도로 vs. 건물)가 불가능.
+    
+- 복잡한 환경 의존성:  
+    구조물이 적은 환경(예: 개활지)에서는 scan matching 성능이 저하될 수 있음.
+    
+
+---
 
 #### 20. 18 ICRA IMLS-SLAM (feature selection + scan to map)  
+
+J.-E. Deschaud, "IMLS-SLAM: Scan-to-Model Matching Based on 3D Data," in 2018 IEEE International Conference on Robotics and Automation (ICRA), Brisbane, QLD, Australia, May 2018, pp. 2480-2485, doi: 10.1109/ICRA.2018.8460921.
+
+1. 개요
+
+- 목적: 이 논문은 3D LiDAR 데이터를 활용한 새로운 SLAM(Simultaneous Localization and Mapping) 알고리즘인 IMLS-SLAM을 제안합니다. 기존의 스캔-투-스캔(scan-to-scan) 방식 대신 스캔-투-모델(scan-to-model) 매칭을 통해 드리프트를 줄이고 정확도를 높이는 데 초점을 둡니다.
+    
+- 배경: LiDAR 기반 SLAM에서 드리프트(위치 추정 오차 누적)는 주요 문제입니다. 특히 루프 클로저(loop closure) 없이 긴 거리를 주행할 때 오차가 커지는 경향이 있습니다. IMLS-SLAM은 이를 해결하기 위해 Implicit Moving Least Squares (IMLS)라는 표면 표현 방법을 사용합니다.
+    
+- 주요 기여:
+    
+    1. 스캔-투-모델 매칭 프레임워크 설계.
+        
+    2. 효율적인 샘플링 전략과 모델 구축 방법 제안.
+        
+    3. 실험을 통해 낮은 드리프트 성능 입증.
+        
+
+---
+
+2. 방법론
+
+2.1 핵심 아이디어
+
+- 스캔-투-모델 매칭: 새로 들어오는 LiDAR 스캔을 이전에 구축된 지도(모델)와 직접 정합(alignment)합니다. 이는 스캔-투-스캔 방식보다 누적 오차를 줄이는 데 유리합니다.
+    
+- IMLS 기반 모델: Implicit Moving Least Squares를 활용해 포인트 클라우드 데이터를 매끄러운 표면으로 표현합니다. 이는 노이즈가 있는 LiDAR 데이터에서 안정적인 정합을 가능하게 합니다.
+    
+
+2.2 알고리즘 구조
+
+1. 데이터 샘플링:
+    
+    - 모든 포인트를 사용하지 않고, 특정 샘플링 전략을 통해 계산 효율성을 높임.
+        
+    - 샘플링은 LiDAR 스캔의 공간적 분포를 고려하여 선택.
+        
+2. 모델 정의:
+    
+    - 이전 LiDAR 스윕(sweep)을 기반으로 로컬 지도를 생성.
+        
+    - IMLS를 통해 포인트 클라우드를 연속적인 표면으로 변환.
+        
+3. 정합 과정:
+    
+    - 새로운 스캔과 모델 간의 거리(오차)를 최소화하도록 변환 행렬(위치와 방향)을 최적화.
+        
+    - 비선형 최소 제곱법(Non-linear Least Squares)을 사용하여 정합 수행.
+        
+4. 지도 업데이트:
+    
+    - 정합된 스캔을 모델에 통합하여 지도를 점진적으로 확장.
+        
+
+2.3 기술적 특징
+
+- 루프 클로저 불필요: 지도와의 지속적인 정합으로 드리프트를 억제.
+    
+- 계산 효율성: 샘플링과 IMLS를 통해 실시간 처리가 가능하도록 설계.
+    
+
+---
+
+3. 실험 결과
+
+3.1 데이터셋 및 설정
+
+- Velodyne HDL32 실험:
+    
+    - 4km 주행 경로에서 테스트.
+        
+    - 루프 클로저 없이 0.40% 드리프트(16m 오차) 달성.
+        
+- KITTI 벤치마크:
+    
+    - Velodyne HDL64 사용.
+        
+    - 글로벌 드리프트 0.69%로 상위권 성능 기록.
+        
+
+3.2 비교 분석
+
+- 기존 방법(예: LOAM, Cartographer)과 비교했을 때, 루프 클로저 없이도 경쟁력 있는 성능을 보임.
+    
+- 특히 긴 경로에서 드리프트 억제 효과가 두드러짐.
+    
+
+3.3 정성적 결과
+
+- 논문은 재구성된 3D 지도와 경로 추정 결과를 시각적으로 제시하며, 특히 복잡한 환경(도시, 터널)에서도 안정적인 매핑을 보여줌.
+    
+
+---
+
+4. 장점
+
+- 낮은 드리프트: 루프 클로저 없이도 긴 경로에서 정확도 유지.
+    
+- 실시간 가능성: 샘플링과 IMLS를 통해 계산 부하 감소.
+    
+- 적응성: 다양한 LiDAR 센서(Velodyne HDL32, HDL64)에 적용 가능.
+    
+
+---
+
+5. 한계점 및 논의
+
+- 샘플링 의존성: 샘플링 전략이 부적절하면 정합 정확도가 떨어질 수 있음.
+    
+- 동적 환경: 논문은 주로 정적 환경을 가정하며, 움직이는 물체(예: 차량, 보행자)에 대한 처리는 미흡.
+    
+- 초기 위치 추정: 초기 위치가 부정확하면 모델과의 정합이 실패할 가능성 있음(별도의 초기화 필요).
+
 #### 21. 18 ICRA Elastic LiDAR Fusion (map deformation)  
-#### 22. 18 IROS LeGO-LOAM (LOAM + range image)  
+C. Park, P. Moghadam, S. Kim, A. Elfes, C. Fookes, and S. Sridharan, "Elastic LiDAR Fusion: Dense Map-Centric Continuous-Time SLAM," in *Proc. IEEE Int. Conf. Robot. Autom. (ICRA)*, Brisbane, QLD, Australia, May 2018, pp. 1206–1213, doi: 10.1109/ICRA.2018.8460698.
+
+1. 서론 (Introduction)
+
+- 배경: SLAM(Simultaneous Localization and Mapping)은 로봇 공학에서 중요한 기술로, 센서 데이터를 통해 환경 지도와 로봇의 위치를 동시에 추정합니다. LiDAR는 정확한 거리 측정으로 인해 SLAM에서 널리 사용되지만, 기존의 연속 시간 SLAM(CT-SLAM)은 글로벌 배치 최적화(batch optimization)에 의존하여 실시간 처리와 장기 운영에서 비효율적입니다.
+    
+- 문제점:
+    
+    - 글로벌 최적화는 계산 복잡도가 높아 시간이 오래 걸림.
+        
+    - 루프 클로저(loop closure) 처리 시 전체 궤적을 재계산해야 함.
+        
+    - 장기 운영 시 맵의 불일치나 노이즈 누적이 발생.
+        
+- 제안: 이 논문은 맵 변형을 통해 글로벌 최적화를 제거하고, 밀도 높은 맵(dense map)을 생성하며 노이즈를 줄이는 "Elastic LiDAR Fusion" 방법을 소개합니다.
+    
+
+---
+
+2. 관련 연구 (Related Work)
+
+- 기존 SLAM:
+    
+    - 이산 시간(discrete-time) SLAM (예: LOAM, Cartographer)은 고정된 시간 간격에서 작동하며 연속적 데이터 처리가 어려움.
+        
+    - 연속 시간 SLAM (예: Furgale 등의 작업)은 궤적을 매끄럽게 모델링하지만, 글로벌 최적화에 의존.
+        
+- 맵 표현:
+    
+    - 점 클라우드(point cloud), 서펄(surfel), 복셀(voxel) 등 다양한 맵 표현 방식이 존재.
+        
+    - 밀도 맵(dense map)은 상세한 환경 표현을 제공하지만 계산 비용이 큼.
+        
+- 본 연구의 차별점: 맵 중심(map-centric) 접근법과 변형 기법으로 기존 한계를 극복.
+    
+
+---
+
+3. 방법론 (Methodology)
+
+논문의 핵심은 "Elastic LiDAR Fusion" 프레임워크로, 크게 세 가지 구성 요소로 나뉩니다.
+
+3.1 연속 시간 로컬 SLAM (Continuous-Time Local SLAM)
+
+- 목적: LiDAR 스캔을 연속 시간 궤적으로 정렬하여 로컬 맵을 생성.
+    
+- 방법:
+    
+    - B-스플라인(B-spline)을 사용해 센서의 궤적을 매끄럽게 모델링.
+        
+    - 로컬 영역에서 LiDAR 스캔 간의 정합(alignment)을 최적화.
+        
+- 특징: 실시간으로 작동하며, 기존 CT-SLAM과 유사하지만 글로벌 최적화로 넘어가지 않음.
+    
+
+3.2 맵 변형 (Map Deformation)
+
+- 핵심 아이디어: 글로벌 궤적 최적화 대신, 맵 자체를 변형하여 루프 클로저와 맵 일관성을 유지.
+    
+- 구현:
+    
+    - 루프 클로저가 감지되면, 맵의 기존 부분을 변형하여 새 데이터와 정합.
+        
+    - 변형은 비선형 최적화(non-linear optimization)를 통해 수행되며, 맵의 공간적 구조를 유지.
+        
+- 장점:
+    
+    - 계산 복잡도가 탐색된 공간 크기에 비례하며, 시간에 의존하지 않음.
+        
+    - 장기 운영 시 맵 불일치 문제를 해결.
+        
+
+3.3 확률적 서펄 융합 (Probabilistic Surfel Fusion)
+
+- 목적: LiDAR 데이터를 밀도 맵으로 통합하며 노이즈를 줄임.
+    
+- 방법:
+    
+    - 서펄(surfel: surface element)을 사용하여 표면을 표현.
+        
+    - 각 서펄에 확률 분포를 부여하여 불확실성을 모델링.
+        
+    - LiDAR 스캔 데이터를 융합하며 노이즈를 필터링.
+        
+- 결과: 고해상도 밀도 맵 생성, 환경의 세부적인 재구성 가능.
+    
+
+---
+
+4. 실험 (Experiments)
+
+- 데이터셋:
+    
+    - 실내 및 실외 환경에서 수집된 LiDAR 데이터 사용.
+        
+    - 예: 복잡한 실내 구조물, 넓은 실외 공간.
+        
+- 비교 대상:
+    
+    - LOAM (LiDAR Odometry and Mapping).
+        
+    - 기존 CT-SLAM 방법.
+        
+- 평가 지표:
+    
+    - 맵의 정확도 (ground truth와 비교).
+        
+    - 계산 효율성 (실행 시간).
+        
+    - 노이즈 감소율.
+        
+- 결과:
+    
+    - 정확도: 글로벌 최적화 없이도 LOAM과 유사하거나 더 나은 맵 일관성.
+        
+    - 효율성: 루프 클로저 처리 속도가 기존 CT-SLAM 대비 빠름.
+        
+    - 노이즈: 서펄 융합으로 LiDAR 노이즈가 크게 감소.
+        
+
+---
+
+5. 논의 (Discussion)
+
+- 장점:
+    
+    - 실시간 처리 가능, 장기 운영에 적합.
+        
+    - 밀도 맵으로 환경의 상세 표현 제공.
+        
+    - 계산 비용이 탐색 공간에만 의존하여 확장성 우수.
+        
+- 한계:
+    
+    - 복잡한 동적 환경(움직이는 객체 다수)에서는 추가 처리가 필요.
+        
+    - 초기 맵 변형에서 약간의 왜곡 가능성.
+        
+- 미래 연구: 동적 객체 처리, 더 큰 규모의 실험.
+    
+
+---
+
+6. 결론 (Conclusion)
+
+- 요약: Elastic LiDAR Fusion은 맵 변형과 연속 시간 SLAM을 결합하여 글로벌 최적화의 필요성을 제거하고, 밀도 맵을 효율적으로 생성하는 새로운 접근법을 제안.
+    
+- 기여:
+    
+    - 장기적이고 실시간 SLAM 가능성 확대.
+        
+    - LiDAR 기반 밀도 맵의 품질 향상.
+        
+- 활용: 자율 주행, 로봇 탐사 등에 적용 가능.
+
+#### 22. 18 IROS LeGO-LOAM (LOAM + range image)  ***
+T. Shan and B. Englot, "LeGO-LOAM: Lightweight and Ground-Optimized Lidar Odometry and Mapping on Variable Terrain," in 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS), Madrid, Spain, Oct. 2018, pp. 4758-4765, doi: 10.1109/IROS.2018.8594299.
+
+1. 서론 (Introduction)
+
+논문은 라이다 기반 SLAM(Simultaneous Localization and Mapping)이 자율주행 및 로봇 공학에서 중요하지만, 특히 임베디드 시스템에서의 실시간 처리가 어려운 과제라고 언급하며 시작됩니다. 기존의 LOAM(Lidar Odometry and Mapping)은 높은 정확도를 제공하지만, 계산 비용이 높아 실시간 성능이 제한적입니다. 이에 LeGO-LOAM은 다음과 같은 목표를 제시합니다:
+
+- 경량화: 저전력 임베디드 시스템(예: NVIDIA Jetson)에서도 실시간으로 동작.
+    
+- 지면 최적화: 지상 차량의 특성을 활용해 효율성과 정확도를 동시에 향상.
+    
+- 변동 지형 대응: 평지뿐만 아니라 고르지 않은 지형에서도 안정적인 성능.
+    
+
+LeGO-LOAM은 LOAM의 핵심 아이디어를 계승하면서도 새로운 전처리 및 최적화 단계를 추가해 계산 효율성을 높였으며, 특히 범위 이미지 투영을 활용해 데이터 처리를 간소화했습니다.
+
+---
+
+2. 시스템 개요 (System Overview)
+
+LeGO-LOAM은 3D 라이다 포인트 클라우드를 입력으로 받아 6자유도(6-DOF) 자세 추정과 환경의 포인트 클라우드 맵을 생성합니다. 시스템은 다섯 가지 주요 모듈로 구성됩니다:
+
+1. 분할 (Segmentation): 포인트 클라우드를 지면과 비지면 포인트로 나누고 클러스터링.
+    
+2. 특징 추출 (Feature Extraction): 가장자리(edge)와 평면(planar) 특징을 식별.
+    
+3. 라이다 오도메트리 (Lidar Odometry): 연속 스캔 간의 상대적 변환 추정.
+    
+4. 라이다 매핑 (Lidar Mapping): 특징을 전역 맵에 등록.
+    
+5. 변환 통합 (Transform Integration): 오도메트리와 매핑 결과를 융합해 최종 자세 출력.
+    
+
+이 파이프라인은 LOAM과 유사하지만, 분할과 특징 추출에서 범위 이미지 기반 접근법을 도입해 효율성을 크게 개선했습니다.
+
+---
+
+3. 방법론 (Methodology)
+
+3.1 분할 (Segmentation)
+
+입력된 3D 포인트 클라우드는 먼저 2D 범위 이미지로 투영됩니다. 범위 이미지는 라이다의 각 스캔 라인을 행(row)으로, 각도를 열(column)으로 구성하며, 각 픽셀은 해당 방향의 거리 값을 저장합니다. 이 구조화된 표현은 데이터 처리를 간소화합니다.
+
+- 지면 분리: 범위 이미지에서 연속적인 깊이 값을 분석해 지면 포인트를 식별합니다. 지면은 일반적으로 평평하거나 완만한 경사를 가지므로, 수직 방향의 변화가 작은 포인트를 지면으로 간주합니다.
+    
+- 클러스터링: 비지면 포인트는 유클리드 거리 기반으로 클러스터링되어 노이즈(예: 먼지, 나뭇잎)를 제거합니다. 클러스터 크기가 너무 작거나 큰 경우 필터링됩니다.
+    
+
+이 단계는 계산 부담을 줄이고 이후 단계에서 사용할 신뢰할 수 있는 포인트만 남깁니다.
+
+3.2 특징 추출 (Feature Extraction)
+
+분할된 포인트 클라우드에서 두 가지 특징을 추출합니다:
+
+- 가장자리 특징 (Edge Features): 깊이 또는 방향이 급격히 변하는 포인트. 이는 건물 모서리나 기둥 같은 구조를 나타냅니다.
+    
+- 평면 특징 (Planar Features): 매끄러운 표면을 나타내는 포인트. 지면이나 벽 같은 평평한 영역에서 주로 발견됩니다.
+    
+
+특징 추출은 범위 이미지의 이웃 픽셀 간 깊이 차이를 분석해 수행되며, LOAM에 비해 더 적은 포인트를 대상으로 하므로 효율적입니다.
+
+3.3 라이다 오도메트리 (Lidar Odometry)
+
+오도메트리 모듈은 연속된 두 스캔 간의 6-DOF 변환을 추정합니다. LeGO-LOAM은 이를 두 단계로 나누어 계산 효율성을 높였습니다:
+
+- 1단계 (지면 제약): 지면의 평면 특징을 사용해 수직 이동(tz)과 롤(θ_roll), 피치(θ_pitch)를 추정합니다. 지면은 안정적인 기준면이므로 이 과정은 빠르고 정확합니다.
+    
+- 2단계 (비지면 제약): 비지면의 가장자리 특징을 사용해 수평 이동(tx, ty)과 요(θ_yaw)를 추정합니다. 1단계 결과를 초기값으로 사용해 계산을 가속화합니다.
+    
+
+각 단계는 Levenberg-Marquardt 최적화를 통해 특징 간 거리 잔차를 최소화합니다. 이 분리된 접근법은 지상 차량의 움직임 특성(예: 제한된 수직 이동)을 활용해 LOAM보다 빠르게 수렴합니다.
+
+3.4 라이다 매핑 (Lidar Mapping)
+
+매핑 모듈은 추정된 변환을 사용해 특징 포인트를 전역 포인트 클라우드 맵에 등록합니다. 루프 클로저(loop closure)는 없지만, 매핑은 오도메트리 결과를 정제해 누적 오차를 줄입니다. 매핑은 주기적으로(예: 1Hz) 실행되며, 최적화된 변환을 오도메트리에 피드백합니다.
+
+3.5 변환 통합 (Transform Integration)
+
+마지막으로, 오도메트리와 매핑 결과를 융합해 최종 6-DOF 자세를 출력합니다. 이 단계는 두 모듈의 추정값을 결합해 안정성과 정확도를 높입니다.
+
+---
+
+4. 실험 및 결과 (Experiments and Results)
+
+논문은 LeGO-LOAM을 다양한 데이터셋과 실제 환경에서 테스트한 결과를 제시합니다. 주요 실험 설정은 다음과 같습니다:
+
+- 하드웨어: Velodyne VLP-16 라이다, NVIDIA Jetson TX2(임베디드 시스템).
+    
+- 데이터셋: 평지, 계단, 고르지 않은 지형(예: 잔디밭, 언덕)을 포함한 환경.
+    
+- 비교 대상: LOAM, A-LOAM(LOAM의 개선 버전).
+    
+
+4.1 성능 평가
+
+- 정확도: LeGO-LOAM은 LOAM과 비슷하거나 약간 우수한 위치 추정 정확도를 보였습니다. 예를 들어, KITTI 데이터셋에서 평균 변환 오차(translation error)는 약 0.1~0.2m로 LOAM과 동등.
+    
+- 계산 효율성: LeGO-LOAM은 LOAM보다 약 3~4배 빠른 처리 속도를 기록했습니다. Jetson TX2에서 평균 10Hz 이상으로 실시간 동작 가능(LOAM은 스캔 누락 발생).
+    
+- 지형 적응성: 고르지 않은 지형에서도 안정적인 지면 분할과 자세 추정을 수행. 단, 극단적인 비지면 환경(예: 공중 이동)에서는 성능이 제한됨.
+    
+
+4.2 범위 이미지의 기여
+
+범위 이미지 기반 분할은 처리 포인트 수를 약 50% 줄였으며, 이는 전체 파이프라인의 속도 향상에 크게 기여했습니다. 특히 지면 분리가 빠르고 정확해 실시간 응용에 적합했습니다.
+
+---
+
+5. 논의 (Discussion)
+
+LeGO-LOAM의 주요 기여는 다음과 같습니다:
+
+- 경량화: 범위 이미지와 지면 최적화를 통해 LOAM의 계산 부담을 줄여 임베디드 시스템에 적합.
+    
+- 지면 특화: 지상 차량의 제약 조건을 활용해 빠르고 안정적인 자세 추정.
+    
+- 실시간 성능: 고효율 전처리(분할, 특징 추출)로 실시간 SLAM 가능.
+    
+
+그러나 한계도 존재합니다:
+
+- 지면 가정: 지면이 없거나 극도로 불규칙한 환경(예: 공중 드론)에서는 성능 저하.
+    
+- 루프 클로저 부재: 장거리 주행 시 누적 오차가 발생할 가능성.
+    
+- 센서 의존성: Velodyne VLP-16과 같은 특정 라이다에 최적화됨.
+
+---
+
+1. SC-LeGO-LOAM (Scan Context 기반 루프 클로저 추가)
+
+- 설명: LeGO-LOAM은 원래 루프 클로저(loop closure)가 약하거나 단순한 ICP 기반 방법에 의존했는데, 이를 보완하기 위해 Scan Context라는 포인트 클라우드 디스크립터를 활용한 SC-LeGO-LOAM이 제안되었습니다. Scan Context는 환경의 전역적 구조를 캡처하여 루프 클로저 탐지를 강화합니다.
+    
+- 특징:
+    
+    - 루프 클로저 모듈을 추가해 장거리 이동 시 누적 오차를 줄임.
+        
+    - LeGO-LOAM의 경량화된 프레임워크를 유지하면서도 더 견고한 전역 일관성 제공.
+        
+- 출처: GitHub 저장소 및 관련 논문에서 확인 가능하며, RobustFieldAutonomyLab에서 개발이 진행됨.
+    
+
+---
+
+2. LeGO-LOAM-OE (Outlier Elimination 기반 개선)
+
+- 설명: 2025년 Measurement: Journal of the International Measurement Confederation에 발표된 연구로, LeGO-LOAM의 단점을 분석하고 이상치 제거(outlier elimination)를 통해 개선한 LeGO-LOAM-OE가 제안되었습니다.
+    
+- 특징:
+    
+    - 원시 포인트 클라우드에서 네 가지 유형의 이상치를 제거해 특징 추출과 자세 추정 정확도 향상.
+        
+    - 지면 분할 시 수평성 제약을 추가해 지면 포인트 추출을 더 정밀하게 함.
+        
+    - 동적 객체를 인접 프레임 간 이동 거리로 제거하여 실외 환경에서의 강인성 개선.
+        
+- 성과: KITTI 데이터셋 등에서 기존 LeGO-LOAM 대비 더 높은 정확도를 보임.
+    
+
+---
+
+3. LeGO-LOAM-FN (Faster_GICP와 NDT 융합)
+
+- 설명: 2024년 MDPI에 게재된 연구로, 복잡한 과수원 환경에서 LeGO-LOAM의 누적 오차 문제를 해결하기 위해 Faster_GICP와 NDT를 융합한 LeGO-LOAM-FN이 개발되었습니다.
+    
+- 특징:
+    
+    - KD-Tree를 사용해 동적 장애물 제거.
+        
+    - 두 단계 필터링으로 매칭에 사용되는 특징 포인트 수를 줄여 최적화 속도 향상.
+        
+    - 루프백 등록(loopback registration)을 통해 RMSE(평균 제곱근 오차)를 0.45m로 줄여 LeGO-LOAM보다 67% 개선.
+        
+- 응용: 과수원 로봇과 같은 비정형 환경에서의 실시간 매핑에 적합.
+    
+
+---
+
+4. LIO-SAM (LiDAR-Inertial Odometry와의 통합)
+
+- 설명: LeGO-LOAM의 개발자인 Tixiao Shan이 이후 발표한 LIO-SAM은 LeGO-LOAM의 아이디어를 계승하면서 IMU(관성 측정 장치)와의 긴밀한 결합(tightly-coupled)을 도입한 시스템입니다.
+    
+- 특징:
+    
+    - LeGO-LOAM의 지면 최적화와 특징 추출 개념을 유지.
+        
+    - 팩터 그래프 최적화를 추가해 루프 클로저와 전역 일관성 강화.
+        
+    - IMU 데이터를 활용해 동적 환경에서의 강인성과 정확도 향상.
+        
+- 성과: KITTI 데이터셋 및 실환경에서 LeGO-LOAM보다 더 높은 성능을 보이며, 현재 오픈소스로 널리 사용됨.
+    
+
+---
+
+5. PaGO-LOAM (지면 분할 효과 연구)
+
+- 설명: LeGO-LOAM의 지면 분할에 초점을 맞춘 후속 연구로, PaGO-LOAM은 지면 분할이 SLAM 성능에 미치는 영향을 분석하고 이를 최적화했습니다.
+    
+- 특징:
+    
+    - 지면 분할의 정확도를 높여 도시 환경에서의 라이다 이동 추정 개선.
+        
+    - 평균 드리프트(drift)를 번역에서 19%, 회전에서 4% 감소시켜 LeGO-LOAM 대비 성능 우위.
+        
+- 응용: 도시 환경에서의 지상 차량에 특화.
+    
+
+---
+
+6. 다층 매핑 및 기타 확장
+
+- 설명: 2024년 Lasers in Engineering에 발표된 연구에서는 LeGO-LOAM에 NDT 매칭과 두 단계 키프레임 스크리닝을 결합한 다층 매핑 방법이 제안되었습니다.
+    
+- 특징:
+    
+    - SOR(Statistical Outlier Removal)로 전처리 후 NDT 매칭 적용.
+        
+    - 루프 클로저 모듈에서 키프레임 스크리닝으로 매핑 오류 감소.
+        
+    - KITTI 데이터셋에서 RMSE 기준으로 매핑 정확도 향상 확인.
+        
+- 의의: 전통적인 LeGO-LOAM의 이상치 간섭 문제를 해결.
+    
+
+---
+
+후속 연구의 공통 트렌드
+
+- 루프 클로저 강화: LeGO-LOAM의 단순한 ICP 기반 루프 클로저를 넘어 Scan Context, NDT, Faster_GICP 등 고급 기법 도입.
+    
+- 동적 환경 대응: 동적 객체 제거와 이상치 필터링으로 실외 환경 적응성 향상.
+    
+- 센서 융합: IMU, 비전 센서 등과의 통합으로 강인성 강화.
+    
+- 응용 확장: 과수원, 도시, 실내 등 다양한 환경으로 범위 확대.
+
+
+---
+
+1. LeGO-LOAM-SC: An Improved Simultaneous Localization and Mapping Method Fusing LeGO-LOAM and Scan Context for Underground Coalmine
+
+- 저널: Sensors (MDPI)
+    
+- 출판일: 2022년 1월 11일
+    
+- 저자: Qin Xin 외
+    
+- 설명: LeGO-LOAM에 Scan Context를 융합하여 루프 클로저를 강화하고, 지하 탄광 환경에서 SLAM 성능을 개선한 연구입니다. KITTI 데이터셋과 실제 지하 주차장 테스트를 통해 평가되었습니다.
+    
+- 링크: [https://www.mdpi.com/1424-8220/22/2/520](https://www.mdpi.com/1424-8220/22/2/520)
+    
+- DOI: 10.3390/s22020520
+    
+
+---
+
+2. LeGO-LOAM-FN: An Improved Simultaneous Localization and Mapping Method Fusing LeGO-LOAM, Faster_GICP and NDT in Complex Orchard Environments
+
+- 저널: Sensors (MDPI)
+    
+- 출판일: 2024년 1월 15일
+    
+- 저자: Jinlai Zhang 외
+    
+- 설명: 복잡한 과수원 환경에서 LeGO-LOAM의 누적 오차 문제를 해결하기 위해 Faster_GICP와 NDT를 융합한 LeGO-LOAM-FN을 제안합니다. 동적 객체 제거와 루프백 등록을 통해 성능을 개선했습니다.
+    
+- 링크: [https://www.mdpi.com/1424-8220/24/2/551](https://www.mdpi.com/1424-8220/24/2/551)
+    
+- DOI: 10.3390/s24020551
+    
+
+---
+
+3. Research on the Application Effect of Lidar SLAM Algorithms in Dynamic Environments
+
+- 저널: Measurement: Journal of the International Measurement Confederation (Elsevier)
+    
+- 출판일: 2025년 (온라인 출판 기준)
+    
+- 저자: Hao Liu 외
+    
+- 설명: LeGO-LOAM을 포함한 여러 SLAM 알고리즘의 동적 환경에서의 성능을 분석하고, LeGO-LOAM-OE(Outlier Elimination)라는 개선 버전을 제안합니다. 이상치 제거와 지면 분할 개선에 초점을 맞췄습니다.
+    
+- 링크: [https://www.sciencedirect.com/science/article/pii/S0263224125000998](https://www.sciencedirect.com/science/article/pii/S0263224125000998)
+    
+- DOI: 10.1016/j.measurement.2025.115977
+    
+
+---
+
+4. A Multi-Layer Mapping Approach of Enhanced LeGO-LOAM with Optimized NDT Matching
+
+- 저널: Lasers in Engineering (Old City Publishing)
+    
+- 출판일: 2024년
+    
+- 저자: X. Zhang 외
+    
+- 설명: LeGO-LOAM에 NDT 매칭과 키프레임 스크리닝을 결합하여 다층 매핑을 제안하며, 이상치 간섭 문제를 해결하고 매핑 정확도를 향상시켰습니다.
+    
+- 링크: 이 저널은 개별 논문 링크가 아닌 저널 사이트를 통해 접근 가능합니다. [https://www.oldcitypublishing.com/journals/lie-home/](https://www.oldcitypublishing.com/journals/lie-home/)
+    
+
 #### 23. 18 IROS LIPS (plane)  
+
+P. Geneva, K. Eckenhoff, Y. Yang, and G. Huang, "LIPS: LiDAR-Inertial 3D Plane SLAM," in 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS), Madrid, Spain, 2018, pp. 1234-1241, doi: 10.1109/IROS.2018.8594463.
+
+1. 연구 배경 및 목적
+
+- 문제: 기존의 LiDAR 기반 SLAM 시스템은 주로 점(Point) 기반으로 작동하며, 계산 복잡도가 높고 환경의 구조적 정보를 충분히 활용하지 못하는 한계가 있음. 특히, 실내 환경처럼 평면이 풍부한 공간에서 효율성을 높일 필요가 있음.
+    
+- 목표: LiDAR와 IMU(Inertial Measurement Unit)를 융합하여 평면(Plane)을 기본 요소로 사용하는 SLAM 시스템을 개발. 이를 통해 계산 효율성을 높이고, 특이점(Singularity) 문제를 해결하며, 실시간 성능을 보장하고자 함.
+    
+
+---
+
+2. 제안된 방법: LIPS 시스템
+
+LIPS는 LiDAR 데이터를 기반으로 평면을 추출하고, 이를 IMU 데이터와 통합하여 로봇의 위치와 환경 지도를 동시에 추정합니다. 주요 구성 요소는 다음과 같습니다:
+
+(1) 평면 표현: Closest Point Plane Representation
+
+- 기존의 법선 벡터(Normal Vector)와 거리 기반 평면 표현은 특이점(예: 평면이 원점 근처에 있을 때 발생하는 수치적 불안정성)이 발생할 수 있음.
+    
+- LIPS는 Closest Point (CP) 표현을 도입:
+    
+    - 평면을 원점에서 가장 가까운 점(CP)으로 정의.
+        
+    - 이를 통해 특이점을 제거하고 수학적 안정성을 확보.
+        
+- CP 표현은 3D 공간에서 평면을 4자유도(3D 위치 + 방향)로 나타냄.
+    
+
+(2) 평면 추출 및 데이터 연관
+
+- LiDAR 포인트 클라우드에서 평면을 추출하기 위해 RANSAC 기반 알고리즘 사용.
+    
+- 연속적인 스캔 간 평면의 대응 관계(Data Association)를 효율적으로 계산.
+    
+
+(3) 그래프 기반 최적화
+
+- LiDAR에서 추출한 평면 제약(Plane Constraints)과 IMU의 관성 데이터(Preintegrated IMU Measurements)를 통합.
+    
+- 상태 변수(로봇 위치, 속도, 방향, 평면 파라미터 등)를 그래프 형태로 모델링.
+    
+- 비선형 최적화(Nonlinear Optimization)를 통해 전체 경로와 지도를 추정.
+    
+
+(4) 실시간 성능
+
+- 계산 부하를 줄이기 위해 키프레임(Keyframe) 기반 접근법 사용.
+    
+- 평면 수가 많아도 효율적으로 처리 가능하도록 설계.
+    
+
+---
+
+3. 구현 및 실험
+
+(1) 시뮬레이션
+
+- Gazebo 시뮬레이터를 활용해 다양한 환경(평면이 많은 실내 공간 등)에서 테스트.
+    
+- 결과: LIPS는 점 기반 SLAM(예: LOAM) 대비 더 낮은 계산 비용으로 유사하거나 더 나은 정확도를 보임.
+    
+
+(2) 실제 실험
+
+- 손으로 들고 다니는 LiDAR-IMU 장치(Handheld LiDAR-IMU Rig)를 사용.
+    
+- 실내 복도와 계단 등 구조적 환경에서 데이터 수집.
+    
+- 결과: 실시간으로 정확한 3D 지도와 궤적을 생성. 특히 평면이 많은 환경에서 강력한 성능 발휘.
+    
+
+---
+
+4. 주요 기여
+
+- 특이점 없는 평면 표현: Closest Point 기반 표현으로 수치적 안정성과 계산 효율성 향상.
+    
+- LiDAR-IMU 융합: 평면 기반 제약과 관성 데이터를 효과적으로 통합한 그래프 최적화 프레임워크.
+    
+- 실시간 가능성: 경량화된 알고리즘으로 자원이 제한된 플랫폼에서도 실행 가능.
+    
+- 오픈소스 제공: 구현 코드를 공개(GitHub: rpng/lips)하여 연구 재현성과 확장성 지원.
+    
+
+---
+
+5. 한계 및 미래 연구
+
+- 한계: 평면이 부족한 환경(예: 야외 숲)에서는 성능이 저하될 가능성 있음.
+    
+- 미래 방향: 점(Point)과 평면(Plane)을 혼합한 하이브리드 접근법, 동적 객체 처리, 더 복잡한 환경에서의 실험 필요성을 언급.
+
 #### 24. 18 IROS Scan Context (robust pr)  
+신입생 세미나에 있는 논문 참고할 것. 
+
 #### 25. 19 A-LOAM (code only)  
+- 코드 구조 간소화 및 최적화
+    
+    - A-LOAM은 LOAM의 원래 코드를 단순화하여 복잡한 수학적 유도나 중복 연산을 줄였습니다. 이를 통해 코드가 더 깔끔하고 이해하기 쉬워졌으며, SLAM(동시적 위치 추정 및 매핑)을 처음 배우는 사람들에게 학습 자료로 적합해졌습니다.
+        
+    - Eigen 라이브러리와 Ceres Solver를 활용하여 수학적 연산과 최적화를 보다 효율적으로 처리합니다. 이는 코드의 가독성과 유지보수성을 높이는 데 기여합니다.
+        
+- 의존성 및 구현 개선
+    
+    - LOAM은 원래 복잡한 의존성과 함께 구현되었지만, A-LOAM은 ROS(로봇 운영 체제)와의 통합을 강화하고, PCL(Point Cloud Library) 및 Ceres Solver와 같은 현대적인 도구를 적극 활용하여 성능을 개선했습니다.
+        
+    - 예를 들어, LOAM의 초기 버전에서는 수작업으로 작성된 복잡한 연산이 많았던 반면, A-LOAM은 Ceres Solver를 통해 비선형 최적화를 더 효율적으로 수행합니다.
+        
+- 실시간 성능 향상
+    
+    - A-LOAM은 계산 효율성을 높여 실시간 처리 속도를 개선했습니다. 특히, LiDAR 포인트 클라우드 데이터를 처리하는 과정에서 불필요한 연산을 줄이고, 병렬 처리를 최적화하여 더 빠른 오도메트리와 매핑 결과를 제공합니다.
+        
+- 구체적인 알고리즘 개선
+    
+    - 특징 추출(Feature Extraction): LOAM과 마찬가지로 에지 포인트와 평면 포인트를 추출하지만, A-LOAM은 이를 더 간소화된 방식으로 수행하며, 계산 비용을 줄였습니다.
+        
+    - 최적화 단계: LOAM에서는 오도메트리와 매핑이 별도로 진행되며, 매핑 단계에서 글로벌 일관성을 유지하기 위해 추가적인 계산이 필요했습니다. A-LOAM은 이를 간소화하여 로컬 매핑과 글로벌 최적화 간의 균형을 더 효율적으로 조정합니다.
+        
+- 적용 가능성 확대
+    
+    - A-LOAM은 다양한 LiDAR 센서(예: Velodyne VLP-16, KITTI 데이터셋 등)에 쉽게 적용할 수 있도록 설계되었습니다. LOAM이 특정 하드웨어에 의존적이었다면, A-LOAM은 설정 파일과 파라미터 조정을 통해 유연성을 높였습니다.
+
 #### 26. 19 ICRA Lio-mapping (Lidar + IMU)  
+H. Ye, Y. Chen, and M. Liu, "Tightly Coupled 3D Lidar Inertial Odometry and Mapping," in Proc. IEEE Int. Conf. Robot. Autom. (ICRA), Montreal, QC, Canada, May 2019, pp. 3144-3150, doi: 10.1109/ICRA.2019.8794330.
+
+1. 서론 (Introduction)
+
+- 배경: 이동 로봇에서 자아 운동 추정(ego-motion estimation)은 필수적이며, LiDAR와 IMU는 각각의 장단점을 가진 센서로 널리 사용됨.
+    
+    - LiDAR: 높은 정밀도의 3D 환경 정보를 제공하지만, 빠른 움직임이나 특징 없는 환경에서 성능 저하.
+        
+    - IMU: 고주파 데이터로 단기 운동 추정이 가능하지만, 드리프트(drift)가 누적됨.
+        
+- 목표: LiDAR와 IMU를 강결합(tightly coupled) 방식으로 융합하여 두 센서의 단점을 보완하고, 실시간으로 신뢰할 수 있는 오도메트리와 매핑을 수행.
+    
+- 기여도:
+    
+    1. LiDAR-IMU 오도메트리(LIO)를 위한 강결합 프레임워크 제안.
+        
+    2. 전역 맵과 LiDAR 포즈를 정렬하는 회전 제약 정제 알고리즘(LIO-mapping) 개발.
+        
+    3. 다양한 실험 환경에서 성능 검증.
+        
+
+---
+
+2. 관련 연구 (Related Work)
+
+- LiDAR 기반 오도메트리: LOAM (Lidar Odometry and Mapping)과 같은 방법은 LiDAR 데이터를 활용해 오도메트리와 매핑을 수행하지만, IMU와의 강결합은 부족.
+    
+- IMU 융합: VINS-Mono와 같은 비전-IMU 시스템은 강결합 방식을 사용하나, LiDAR 기반 연구는 느슨한 결합(loosely coupled)이 주를 이룸.
+    
+- 차별점: 이 논문은 LiDAR와 IMU를 강결합하여 특징 추출 및 최적화를 동시에 수행하며, 전역 맵 정합성을 개선.
+    
+
+---
+
+3. 방법론 (Methodology)
+
+논문은 두 단계로 나뉨: **LIO (Lidar Inertial Odometry)**와 LIO-mapping.
+
+3.1. LIO: LiDAR-IMU 오도메트리
+
+- 입력: LiDAR 포인트 클라우드와 IMU 가속도/각속도 데이터.
+    
+- 프로세스:
+    
+    1. 운동 보정(Motion Compensation): IMU 데이터를 활용해 LiDAR 스캔 간 왜곡 제거.
+        
+    2. 특징 추출(Feature Extraction): LOAM에서 영감을 받아 에지(edge)와 평면(planar) 특징을 추출.
+        
+    3. 비선형 최적화(Nonlinear Optimization):
+        
+        - LiDAR 잔차(residual): 특징점과 로컬 맵 간 거리 최소화.
+            
+        - IMU 잔차: IMU 예측과 LiDAR 포즈 간 오차 최소화.
+            
+        - 비용 함수: LiDAR와 IMU 잔차를 결합하여 공동 최적화.
+            
+- 출력: 실시간으로 계산된 로봇의 6-DoF 포즈(위치와 방향).
+    
+
+3.2. LIO-mapping: 전역 맵 정제
+
+- 문제: LIO만으로는 장기 드리프트가 발생할 수 있음.
+    
+- 해결책: 전역 맵과 LiDAR 포즈를 정렬하는 후처리 단계.
+    
+    - 회전 제약(Rotation Constraint): IMU에서 추정된 회전 정보를 활용해 포즈 그래프(pose graph)를 정제.
+        
+    - 최적화: 전역 맵과 포즈 간 일관성을 높이기 위해 비선형 최적화 수행.
+        
+- 결과: 드리프트 감소 및 전역적으로 일관된 맵 생성.
+    
+
+3.3. 수학적 모델
+
+- 상태 벡터:
+    
+    $$X = [R, p, v, b_a, b_g]$$
+        (회전, 위치, 속도, 가속도 바이어스, 자이로 바이어스).
+    
+- 비용 함수:   
+    $$J(X) = \sum_{k} \| r_{L,k}(X) \|^2 + \sum_{m} \| r_{I,m}(X) \|^2$$
+    
+    여기서  $r_{L,k}$ 는 LiDAR 잔차, $r_{I,m}$ 는 IMU 잔차.
+    
+
+---
+
+4. 실험 (Experiments)
+
+- 데이터셋: 실내/실외 환경에서 수집된 LiDAR-IMU 데이터.
+    
+- 비교 대상: LOAM, LeGO-LOAM 등 기존 방법.
+    
+- 평가 지표: 포즈 추정 정확도(RMSE), 드리프트, 계산 시간.
+    
+- 결과:
+    
+    1. 정확도: 빠른 움직임과 특징 부족 환경에서도 LOAM 대비 낮은 RMSE.
+        
+    2. 실시간성: IMU 업데이트 속도(200Hz)로 동작 가능.
+        
+    3. 드리프트: LIO-mapping 적용 시 장거리 실험에서 드리프트 감소(예: 100m 경로에서 0.5% 이하).
+        
+- 하드웨어: Intel i7 CPU에서 실시간 실행 가능.
+    
+
+---
+
+5. 논의 (Discussion)
+
+- 장점:
+    
+    - 강결합 방식으로 센서 간 상호 보완 효과 극대화.
+        
+    - 회전 제약을 통한 전역 맵 정합성 개선.
+        
+- 한계:
+    
+    - 계산 복잡도가 높아 저사양 하드웨어에서는 최적화 필요.
+        
+    - 루프 클로저(loop closure)는 포함되지 않아 대규모 환경에서 한계 가능성.
+        
+
+---
+
+6. 결론 (Conclusion)
+
+- 제안된 LIO와 LIO-mapping은 LiDAR와 IMU를 강결합하여 실시간 오도메트리와 매핑을 성공적으로 수행.
+    
+- 실험 결과는 다양한 환경에서 높은 정밀도와 견고성을 입증.
+    
+- 향후 과제: 루프 클로저 통합, 경량화로 실시간 성능 개선.
 
 #### 27. 19 IV Delio (rot/trans decoupled)  
+
+Q. M. Thomas, O. Wasenmüller and D. Stricker, "DeLiO: Decoupled LiDAR Odometry," 2019 IEEE Intelligent Vehicles Symposium (IV), Paris, France, 2019, pp. 2491-2497, doi: 10.1109/IVS.2019.8813882.
+
+1. 논문 개요
+
+- 제목: DeLiO: Decoupled LiDAR Odometry
+    
+- 저자: Queens Maria Thomas, Oliver Wasenmüller, Didier Stricker
+    
+- 출판: IEEE Intelligent Vehicles Symposium (IV), 2019
+    
+- 핵심 아이디어: 기존 LiDAR 오도메트리 방법은 회전과 이동을 동시에 최적화하여 계산 복잡도가 높고 오류가 누적될 수 있음. 이를 해결하기 위해 회전과 이동을 완전히 분리하여 순차적으로 추정.
+    
+- 목표: 계산 효율성을 높이고, KITTI 데이터셋에서 기존 방법들과 비교해 경쟁력 있는 성능을 달성.
+    
+
+---
+
+2. 배경 및 문제 제기
+
+- LiDAR 오도메트리란?: LiDAR 센서로 얻은 3D 포인트 클라우드를 활용해 센서(또는 차량)의 상대적 위치와 방향을 추정하는 기술.
+    
+- 기존 문제점:
+    
+    1. 회전과 이동을 동시에 추정하는 방식(6-DoF 최적화)은 계산량이 많고 초기 추정에 민감.
+        
+    2. 환경의 복잡성(예: 동적 객체, 빈약한 특징)으로 인해 오류가 발생하기 쉬움.
+        
+    3. KITTI와 같은 데이터셋에서 기존 방법(LOAM 등)은 성능은 좋지만 실시간 처리에 한계가 있음.
+        
+- 제안 이유: 회전과 이동을 분리하면 각각의 문제를 독립적으로 해결할 수 있어 더 간단하고 효율적인 솔루션이 가능.
+    
+
+---
+
+3. 제안 방법 (DeLiO)
+
+DeLiO는 두 단계로 나뉘어 작동합니다: 회전 추정과 이동 추정.
+
+3.1. 회전 추정 (Rotation Estimation)
+
+- 입력: 연속적인 두 LiDAR 프레임의 포인트 클라우드 $P_t$  와  $P_{t+1}$
+- 과정:
+    
+    1. 표면 법선 추출: 포인트 클라우드에서 각 포인트의 표면 법선(Surface Normal)을 계산.
+        
+        - 법선은 주변 포인트들을 이용한 주성분 분석(PCA)으로 추정.
+            
+    2. 단위 구면 매핑: 법선을 단위 구(Unit Sphere)로 투영하여 방향 분포를 표현.
+        
+    3. 패턴 매칭: 두 프레임의 단위 구면에서 법선 패턴을 비교해 회전 변화(예: yaw, pitch, roll)를 계산.
+        
+        - 회전 행렬 ( R )을 추정.
+            
+- 특징: 특징점 매칭 대신 법선 분포를 사용해 환경의 기하학적 구조에 덜 의존적.
+    
+
+3.2. 이동 추정 (Translation Estimation)
+
+- 입력: 회전이 제거된 포인트 클라우드 ( $P_{t+1}' = R^{-1} P_{t+1}$  ).
+    
+- 과정:
+    
+    1. 회전 보정 후, 두 프레임 간 순수 이동 벡터 ( T )만 남음.
+        
+    2. 포인트 간 최근접 매칭(Nearest Neighbor Matching)을 통해 ( T )를 계산.
+        
+        - 간단한 평균 이동 벡터로 최종 이동량 도출.
+            
+- 특징: 회전이 이미 해결되었으므로 3-DoF(전후, 좌우, 상하)만 계산하면 됨.
+    
+
+3.3. 전체 파이프라인
+
+- $P_t$    와 $P_{t+1}$ → 법선 추출 → 회전 ( R ) 추정 → $P_{t+1}$  회전 보정 
+  → 이동 ( T ) 추정 → 최종 6-DoF 변환 (( R, T )).    
+
+---
+
+4. 실험 및 평가
+
+- 데이터셋: KITTI Odometry Benchmark
+    
+    - 11개의 시퀀스(00-10)로 학습 및 평가.
+        
+- 비교 대상: LOAM (LiDAR Odometry and Mapping), ICP (Iterative Closest Point) 등.
+    
+- 평가 지표:
+    
+    1. 평균 이동 오류 (Translation Error): 경로 길이 대비 퍼센트로 계산.
+        
+    2. 평균 회전 오류 (Rotation Error): 각도 단위로 계산.
+        
+- 결과:
+    
+    - KITTI 시퀀스에서 평균 이동 오류 약 1.5%~2%, 회전 오류 약 0.01°/m 수준.
+        
+    - LOAM보다 약간 낮은 정확도를 보이지만, 계산 속도가 빠르고 실시간 처리에 유리.
+        
+    - 특히 특징이 적은 환경(예: 고속도로)에서 안정적인 성능.
+        
+
+---
+
+5. 장점
+
+- 효율성: 회전과 이동을 분리해 계산 복잡도 감소 (6-DoF → 3-DoF + 3-DoF).
+    
+- 견고성: 특징점 대신 법선 분포를 사용해 환경 의존성 감소.
+    
+- 단순성: 복잡한 최적화(예: 비선형 최소제곱) 대신 간단한 패턴 매칭과 평균 계산 사용.
+    
+
+---
+
+6. 한계
+
+- 법선 품질 의존: 포인트 클라우드 밀도가 낮거나 노이즈가 많으면 법선 추정이 부정확.
+    
+- 동적 객체: 움직이는 객체에 대한 처리가 미흡 (별도 필터링 필요).
+    
+- 정확도: 복잡한 환경에서 LOAM 같은 통합 방법에 비해 약간 뒤짐.
+
 #### 28. 19 IJRR SegMap (deep pr)  
 
+R. Dubé, A. Cramariuc, D. Dugas, J. I. Nieto, R. Siegwart, and C. Cadena, "SegMap: 3D segment mapping using data-driven descriptors," *Int. J. Robot. Res.*, vol. 38, no. 2-3, pp. 339–355, Mar. 2019, doi: 10.1177/0278364919868253.
+
+1. 배경 및 문제 정의
+
+기존 문제
+
+- 3D 포인트 클라우드 데이터를 이용한 기존 매핑 방법(SLAM 등)은 데이터 크기가 크고 계산 비용이 높아 실시간 처리가 어려움.
+    
+- 환경의 의미적 이해(예: "이건 나무다", "이건 건물이다")를 추가하려면 추가적인 처리 과정이 필요.
+    
+- 다중 로봇 간 데이터 공유 시, 대역폭 제한으로 인해 효율적인 압축이 필요.
+    
+
+SegMap의 목표
+
+1. 압축: 대용량 포인트 클라우드를 세그먼트 단위로 압축해 데이터 크기를 줄임.
+    
+2. 위치 추정: 세그먼트 디스크립터를 활용해 로봇의 위치를 정확히 파악.
+    
+3. 의미 추출: 세그먼트를 통해 환경의 구조적/의미적 정보를 이해.
+    
+
+---
+
+2. SegMap 방법론
+
+SegMap는 크게 세 단계로 구성됩니다.
+
+1) 세그먼트 추출 (Segmentation)
+
+- 방법: 3D 포인트 클라우드에서 개별 객체(예: 나무, 차, 벽 등)를 나타내는 세그먼트를 추출.
+    
+- 기술: Incremental Dynamic Connectivity 알고리즘을 사용해 포인트 클라우드를 클러스터링.
+    
+- 특징: 실시간으로 처리 가능하며, 환경 변화에 적응적.
+    
+
+2) 디스크립터 생성 (Descriptor Generation)
+
+- 방법: 각 세그먼트에 대해 고유한 특징 벡터(descriptor)를 생성.
+    
+- 기술: 딥러닝 기반의 오토인코더(autoencoder)를 사용해 세그먼트의 기하학적 특징을 압축된 형태로 학습.
+    
+    - 입력: 세그먼트의 포인트 클라우드 데이터.
+        
+    - 출력: 저차원(예: 64차원) 디스크립터.
+        
+- 장점: 수작업으로 설계된 디스크립터(예: SHOT, FPFH)보다 환경에 강건하고 표현력이 뛰어남.
+    
+
+3) 매핑 및 위치 추정 (Mapping and Localization)
+
+- 매핑: 세그먼트와 디스크립터를 사용해 환경의 압축된 3D 맵을 생성.
+    
+- 위치 추정: 현재 관측된 세그먼트의 디스크립터와 저장된 맵의 디스크립터를 비교해 로봇 위치를 계산.
+    
+- 의미 추출: 세그먼트를 클러스터링해 환경의 의미적 분류(예: "도로", "건물")를 추론.
+    
+
+---
+
+3. 실험 결과
+
+논문에서는 SegMap를 여러 데이터셋과 시나리오에서 평가했습니다.
+
+데이터셋
+
+- KITTI: 자율주행 차량 데이터(도시 환경).
+    
+- ETHZ Dataset: 실내외 로봇 데이터.
+    
+
+주요 결과
+
+1. 압축률:
+    
+    - 원본 포인트 클라우드 대비 약 100배 이상 압축(예: 수백 MB → 수백 KB).
+        
+    - 다중 로봇 간 데이터 전송에 유리.
+        
+2. 위치 추정 성능:
+    
+    - 기존 방법(ICP, Scan Context 등) 대비 비슷하거나 더 나은 정확도.
+        
+    - 특히 노이즈가 많은 환경에서 강건함.
+        
+3. 의미 추출:
+    
+    - 세그먼트를 기반으로 환경의 구조적 분류 성공(예: 나무 87%, 건물 92% 정확도).
+        
+4. 실시간 성능:
+    
+    - 세그먼트 추출 및 디스크립터 생성이 초당 10프레임 이상으로 처리 가능.
+        
+
+비교
+
+- 기존 방법: 포인트 클라우드 전체를 처리(ICP)하거나 수작업 디스크립터 사용.
+    
+- SegMap: 세그먼트 단위로 처리해 효율성과 표현력을 동시에 개선.
+    
+
+---
+
+5. 의의 및 한계
+
+의의
+
+- 효율성: 대용량 데이터를 압축해 실시간 매핑 가능.
+    
+- 확장성: 다중 로봇 시스템에서 협업 가능.
+    
+- 유연성: 환경의 의미적 이해를 추가로 제공.
+    
+
+한계
+
+- 의존성: 딥러닝 모델 학습을 위한 초기 데이터 필요.
+    
+- 복잡한 환경: 매우 혼잡하거나 동적인 환경에서 세그먼트 추출이 어려울 수 있음.
+    
+- 일반화: 특정 데이터셋 외의 환경에서 성능 검증 필요.
+
 #### 29. 19 IROS SuMa++ (semantic)  
-
-#### 30 . 19 IROS Highway Laser-Inertial Odometry and Mapping (semantic + fusion)  
-
-#### 31. 19 IROS Stereo Visual Inertial LiDAR fusion (짬뽕)
 
 SuMa++와 PIN-SLAM은 모두 Xieyuanli Chen, Jens Behley, Cyrill Stachniss 등이 포함된 동일한 연구팀(주로 University of Bonn의 Photogrammetry and Robotics Lab)에서 개발된 LiDAR 기반 SLAM(Simultaneous Localization and Mapping) 기술입니다. 그러나 두 접근법은 목표, 방법론, 그리고 구현 방식에서 뚜렷한 차이점을 보입니다. 아래에서 주요 차이점을 상세히 설명하겠습니다.
 
@@ -1073,8 +2404,531 @@ SuMa++와 PIN-SLAM은 모두 Xieyuanli Chen, Jens Behley, Cyrill Stachniss 등�
 
 SuMa++와 PIN-SLAM은 동일한 연구팀의 연속적인 발전 과정을 보여줍니다. SuMa++는 실시간성과 의미론적 이해에 초점을 맞춘 반면, PIN-SLAM은 암묘적 표현을 통해 메모리 효율성과 글로벌 일관성을 극대화한 후속 연구입니다. 사용 목적에 따라 선택이 달라질 수 있는데, 실시간 내비게이션에는 SuMa++가, 정밀한 장기 매핑과 재구성에는 PIN-SLAM이 더 적합합니다.
 
-추가로 특정 부분에 대해 더 알고 싶으시면 말씀해주세요!
 
-https://jml-note.tistory.com/entry/Graph-SLAM-with-Example-Code
+#### 30 . 19 IROS Highway Laser-Inertial Odometry and Mapping (semantic + fusion)  
 
-https://velog.io/@cjh1995-ros/SLAM-and-DL-Paper-Lists
+S. Zhao, Z. Fang, H. Li, and S. Scherer, "A robust laser-inertial odometry and mapping method for large-scale highway environments," in Proc. IEEE/RSJ Int. Conf. Intell. Robots Syst. (IROS), Macau, China, Nov. 2019, pp. 6266-6273, doi: 10.1109/IROS40897.2019.8968528.
+
+
+1. 개요
+
+- 제목: A Robust Laser-Inertial Odometry and Mapping Method for Large-Scale Highway Environments
+    
+- 저자: Shibo Zhao, Zheng Fang, Hao Li, Sebastian Scherer 등
+    
+- 출처: 2019 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)
+    
+- 목적: 고속도로와 같은 대규모 환경에서 실시간, 저드리프트, 견고한 자세 추정 및 정적 맵 생성을 위한 레이저-관성 오도메트리 및 매핑 방법 제안.
+    
+- 핵심 키워드: Laser-Inertial Fusion, Semantic Segmentation, Dynamic Object Removal, Highway Mapping.
+    
+
+이 논문은 레이저 스캐너(LiDAR)와 관성 측정 장치(IMU)를 융합하여 고속도로 환경에서 이동 로봇이나 자율주행 차량의 위치 추정(Odometry)과 환경 매핑(Mapping)을 수행하는 방법을 다룹니다. 특히 동적 객체(예: 차량, 보행자)를 제거하고 정적 맵을 생성하는 데 초점을 맞췄습니다.
+
+---
+
+2. 방법론
+
+논문에서 제안된 시스템은 네 개의 순차적 모듈로 구성됩니다.
+
+(1) 스캔 전처리 모듈 (Scan Preprocessing Module)
+
+- 목적: LiDAR 스캔 데이터의 모션 왜곡(Motion Distortion)을 보정.
+    
+- 방법:
+    
+    - IMU 데이터를 활용해 각 스캔 포인트의 시간에 따른 위치 변화를 보정.
+        
+    - 결과적으로 왜곡 없는 포인트 클라우드를 생성하여 후속 모듈의 정확도를 높임.
+        
+- 특징: 실시간 처리가 가능하도록 계산 효율성을 유지.
+    
+
+(2) 동적 객체 탐지 모듈 (Dynamic Object Detection Module)
+
+- 목적: 환경 내 동적 객체(움직이는 차량, 사람 등)를 식별 및 제거.
+    
+- 방법:
+    
+    - CNN(Convolutional Neural Network) 기반의 의미론적 세그멘테이션(Semantic Segmentation)을 사용.
+        
+    - 포인트 클라우드 데이터를 2D 이미지로 투영한 뒤, 사전 학습된 CNN 모델로 동적 객체를 분류.
+        
+    - 분류된 동적 객체 포인트를 제거하여 정적 환경 데이터만 남김.
+        
+- 특징: Semantic 정보를 활용해 매핑 과정에서 불필요한 노이즈를 줄임.
+    
+
+(3) 레이저-관성 오도메트리 모듈 (Laser-Inertial Odometry Module)
+
+- 목적: 고주파수에서 대략적인 자세 추정 제공.
+    
+- 방법:
+    
+    - Error State Kalman Filter (ESKF)를 통해 LiDAR와 IMU 데이터를 긴밀히 융합.
+        
+    - IMU는 고주파수(예: 200Hz)로 초기 자세 예측을 제공하고, LiDAR 데이터(저주파수, 예: 10Hz)는 이를 보정.
+        
+    - 결과적으로 연속적이고 드리프트가 적은 오도메트리 출력 생성.
+        
+- 특징: Fusion 기술로 센서 간 상호 보완적 장점을 극대화.
+    
+
+(4) 레이저 매핑 모듈 (Laser Mapping Module)
+
+- 목적: 정밀한 글로벌 정적 맵 생성.
+    
+- 방법:
+    
+    - "Frame-to-Model" 스캔 매칭 전략 사용: 현재 스캔 데이터를 기존 글로벌 맵과 정합.
+        
+    - 동적 객체가 제거된 정적 포인트 클라우드를 기반으로 맵을 갱신.
+        
+    - 최적화 알고리즘(예: GICP, Generalized Iterative Closest Point)을 활용해 정합 정확도 향상.
+        
+- 특징: 대규모 환경에서 일관된 맵을 유지하며 실시간 성능 보장.
+    
+
+---
+
+3. 실험 결과
+
+논문은 제안된 방법의 성능을 실제 고속도로 데이터셋으로 평가했습니다.
+
+(1) 실험 설정
+
+- 하드웨어:
+    
+    - LiDAR: Velodyne HDL-32E (32채널, 10Hz)
+        
+    - IMU: Xsens MTi-100 (200Hz)
+        
+    - 컴퓨팅 플랫폼: Intel i7 CPU 탑재 노트북
+        
+- 데이터셋:
+    
+    - 고속도로 환경에서 수집된 데이터 (약 10km 이상의 주행 경로)
+        
+    - 동적 객체(차량)와 정적 구조물(도로, 가드레일 등)이 혼재.
+        
+
+(2) 주요 결과
+
+- 오도메트리 성능:
+    
+    - 드리프트율: 약 0.1% (10km 주행 시 약 10m 오차), 기존 방법(예: LOAM) 대비 30% 개선.
+        
+    - 실시간 처리 속도: 20ms/프레임 (50Hz 이상).
+        
+- 매핑 성능:
+    
+    - 동적 객체 제거율: 95% 이상 (CNN 세그멘테이션 정확도 기반).
+        
+    - 맵 정합 오차: 평균 0.05m (정적 구조물 기준).
+        
+- 비교:
+    
+    - LOAM (LiDAR Odometry and Mapping)과 비교 시, 동적 객체 환경에서 더 높은 견고성 확인.
+        
+    - IMU 융합 없는 방법 대비 드리프트 감소.
+        
+
+(3) 시각화
+
+- 논문에는 정적 맵과 동적 객체 제거 전/후의 포인트 클라우드 비교 이미지가 포함됨.
+    
+- 고속도로의 차선, 가드레일 등이 선명하게 재구성됨.
+    
+
+---
+
+4. 논의 및 한계
+
+- 장점:
+    
+    - 동적 객체 제거로 매핑 품질 향상.
+        
+    - 실시간성과 견고성을 동시에 만족.
+        
+    - 고속도로와 같은 대규모 환경에 특화.
+        
+- 한계:
+    
+    - CNN 모델이 사전 학습된 데이터에 의존하므로, 새로운 환경에서는 추가 학습 필요 가능성.
+        
+    - 고속도로 외의 복잡한 도시 환경(예: 좁은 골목)에서의 성능은 미검증.
+        
+    - 계산 부하가 여전히 존재하며, 저사양 하드웨어에서는 최적화 필요.
+#### 31. 19 IROS Stereo Visual Inertial LiDAR fusion (짬뽕)
+
+W. Shao, S. Vijayarangan, C. Li, and G. Kantor, "Stereo Visual Inertial LiDAR Simultaneous Localization and Mapping," in Proc. IEEE/RSJ Int. Conf. Intell. Robots Syst. (IROS), Macau, China, Nov. 2019, pp. 370-377, doi: 10.1109/IROS40897.2019.8968517.
+
+1. 논문 개요
+
+- 목적: 스테레오 비전(Vision), 관성(Inertial), LiDAR 센서를 결합하여 기존 LiDAR 기반 SLAM(Simultaneous Localization and Mapping)의 한계를 극복하고, 정확도와 견고성을 향상시킨 새로운 VIL-SLAM 시스템을 제안.
+    
+- 배경:
+    
+    - LiDAR 기반 SLAM은 터널, 개활지 등 특정 환경에서 특징점 부족으로 실패 가능성이 있음.
+        
+    - 스테레오 비전-관성 오도메트리(VIO)는 단독으로 사용 시 드리프트(drift)가 누적됨.
+        
+    - 이를 해결하기 위해 세 센서를 융합.
+        
+- 주요 기여:
+    
+    1. 스테레오 VIO와 LiDAR 매핑을 긴밀히 통합한 실시간 6-DOF(자유도) 포즈 추정.
+        
+    2. 거의 실시간으로 고해상도(1cm voxel) 밀도 맵 생성.
+        
+    3. 다양한 환경에서 기존 LiDAR SLAM보다 우수한 성능 입증.
+        
+
+---
+
+2. 시스템 구조
+
+논문에서 제안된 VIL-SLAM 시스템은 다음과 같은 파이프라인으로 구성됩니다:
+
+1. 스테레오 비전-관성 오도메트리(VIO):
+    
+    - 스테레오 카메라와 IMU(Inertial Measurement Unit)를 사용해 초기 포즈 추정.
+        
+    - 특징점 추출 및 매칭(ORB 기반) 후, IMU 데이터를 결합해 단기적으로 정확한 모션 추적.
+        
+2. LiDAR 매핑 모듈:
+    
+    - LiDAR 포인트 클라우드를 사용하여 글로벌 맵 생성.
+        
+    - VIO에서 얻은 포즈를 초기값으로 사용해 LiDAR 데이터를 정렬.
+        
+3. 루프 클로저(Loop Closure):
+    
+    - 과거 방문 위치를 인식해 드리프트 보정.
+        
+    - LiDAR 데이터 기반의 Scan-to-Map 정합 사용.
+        
+4. 최적화:
+    
+    - VIO와 LiDAR 데이터를 결합한 그래프 기반 최적화로 전체 궤적과 맵을 정제.
+        
+
+데이터 융합 특징
+
+- 시간 동기화: 센서 간 시간 스탬프를 정밀하게 맞춤.
+    
+- 보정: 카메라-IMU, LiDAR-카메라 간 외부 파라미터 보정 수행.
+    
+
+---
+
+3. 방법론 세부 사항
+
+3.1 스테레오 VIO
+
+- 입력: 스테레오 이미지 쌍과 IMU 데이터.
+    
+- 처리:
+    
+    - ORB 특징점을 추출하고, 스테레오 매칭으로 깊이 계산.
+        
+    - IMU 가속도와 각속도를 적분해 단기 포즈 예측.
+        
+    - 비선형 최적화로 VIO 포즈 정제.
+        
+- 출력: 로컬 프레임에서 실시간 6-DOF 포즈.
+    
+
+3.2 LiDAR 매핑
+
+- 입력: LiDAR 포인트 클라우드와 VIO 포즈.
+    
+- 처리:
+    
+    - VIO 포즈를 초기값으로 포인트 클라우드 정합.
+        
+    - Iterative Closest Point (ICP) 기반 Scan-to-Map 정합.
+        
+    - voxel 격자(1cm 해상도)로 밀도 맵 생성.
+        
+- 출력: 글로벌 맵과 정제된 포즈.
+    
+
+3.3 루프 클로저
+
+- 방법:
+    
+    - 과거 LiDAR 스캔과 현재 스캔 간 유사성 계산.
+        
+    - 루프가 감지되면 그래프 최적화로 드리프트 보정.
+        
+- 효과: 장기적인 정확도 유지.
+    
+
+3.4 전체 최적화
+
+- 그래프 기반 접근:
+    
+    - 노드: VIO 및 LiDAR 포즈.
+        
+    - 엣지: 센서 간 제약 조건.
+        
+- 최적화 도구: g2o 라이브러리 사용.
+    
+
+---
+
+4. 실험 결과
+
+4.1 실험 환경
+
+- 데이터셋:
+    
+    - KITTI 데이터셋(실외 자율주행 환경).
+        
+    - 저자 자체 수집 데이터(터널, 실내 환경 포함).
+        
+- 하드웨어:
+    
+    - 스테레오 카메라, IMU, Velodyne VLP-16 LiDAR.
+        
+    - Intel i7 CPU 기반 실시간 처리.
+        
+
+4.2 성과
+
+1. 정확도:
+    
+    - KITTI 데이터셋에서 평균 위치 오차(RPE): 0.15m (LiDAR-only 대비 30% 개선).
+        
+    - 터널 환경에서 LiDAR-only SLAM 실패 시에도 견고한 매핑 성공.
+        
+2. 속도:
+    
+    - VIO: 30Hz 이상 실시간 처리.
+        
+    - LiDAR 매핑: 10Hz (거의 실시간).
+        
+3. 맵 품질:
+    
+    - 1cm voxel 해상도의 고밀도 맵 생성.
+        
+
+4.3 비교
+
+- LiDAR-only SLAM (LOAM): 특징점 부족 환경에서 실패.
+    
+- VIO-only: 장거리에서 드리프트 누적.
+    
+- VIL-SLAM: 두 센서의 장점을 결합해 모든 환경에서 우수.
+    
+
+---
+
+5. 논의 및 한계
+
+- 장점:
+    
+    - 다양한 환경(실내, 실외, 터널)에서 견고함.
+        
+    - 실시간성과 고해상도 맵 생성의 균형.
+        
+- 한계:
+    
+    - 센서 동기화 및 보정에 의존적.
+        
+    - 계산 비용이 여전히 높아 저사양 하드웨어에서는 제한적.
+
+
+#### LeGO LOAM vs Fast LIO vs PIN SLAM
+
+1. 개요
+
+- LeGO-LOAM (Lightweight and Ground-Optimized Lidar Odometry and Mapping)
+    
+    - 출시: 2018년 IROS에서 Tixiao Shan과 Brendan Englot이 발표.
+        
+    - 목표: 지상 차량에 특화된 경량화된 실시간 6자유도(6-DOF) 자세 추정.
+        
+    - 특징: 지면 분할과 범위 이미지(range image)를 활용해 계산 효율성을 높임.
+        
+- Fast-LIO (Fast and Robust Lidar-Inertial Odometry)
+    
+    - 출시: 2021년 Xu et al.에 의해 제안 (arXiv 및 후속 논문).
+        
+    - 목표: IMU와 라이다를 긴밀히 결합(tightly-coupled)하여 빠르고 강인한 오도메트리 제공.
+        
+    - 특징: 직접 포인트 클라우드 처리를 통해 계산 속도와 강인성을 동시에 추구.
+        
+- PIN-SLAM (Probabilistic Iterative Correspondence SLAM)
+    
+    - 출시: 2023년 Li et al.에 의해 제안 (arXiv).
+        
+    - 목표: 확률적 반복 대응(Probabilistic Iterative Correspondence)을 통해 정확도와 강인성을 개선.
+        
+    - 특징: 동적 환경과 장거리 이동에 적합하도록 설계된 최신 SLAM 시스템.
+        
+
+---
+
+2. 입력 데이터
+
+- LeGO-LOAM
+    
+    - 필수: 3D 라이다 (예: Velodyne VLP-16).
+        
+    - 선택: IMU(관성 측정 장치) 데이터로 모션 보정 가능, 하지만 필수는 아님.
+        
+    - 가정: 지면이 존재하는 환경(지상 차량에 최적화).
+        
+- Fast-LIO
+    
+    - 필수: 3D 라이다와 IMU.
+        
+    - 특징: IMU와 라이다 데이터를 긴밀히 융합하여 동적 환경에서도 안정적인 추정 가능.
+        
+    - 가정: IMU의 고주파 데이터(100Hz 이상)를 활용해 모션 왜곡 보정.
+        
+- PIN-SLAM
+    
+    - 필수: 3D 라이다.
+        
+    - 선택: IMU 지원 가능하나 기본적으로 라이다 단독으로 동작 가능.
+        
+    - 특징: 동적 객체와 환경 변화에 강인하도록 설계됨.
+        
+
+---
+
+3. 처리 방식
+
+- LeGO-LOAM
+    
+    - 전처리: 포인트 클라우드를 범위 이미지로 투영해 지면과 비지면 포인트를 분할.
+        
+    - 특징 추출: 가장자리(edge)와 평면(planar) 특징을 추출.
+        
+    - 최적화: 두 단계 Levenberg-Marquardt(LM) 최적화로 6-DOF 변환 추정 (지면 특징으로 tz, roll, pitch 먼저 계산 후 나머지 추정).
+        
+    - 루프 클로저: 단순한 ICP 기반 루프 탐지(선택적).
+        
+    - 특징: 지면 최적화로 계산량 감소, 경량화에 초점.
+        
+- Fast-LIO
+    
+    - 전처리: 포인트 클라우드를 직접 처리하며, IMU로 모션 왜곡 보정.
+        
+    - 특징 추출: 특징 추출 대신 모든 포인트를 사용해 직접 상태 추정.
+        
+    - 최적화: 칼만 필터 기반의 긴밀한 융합으로 실시간 상태 업데이트.
+        
+    - 루프 클로저: 기본적으로 없음(후속 버전인 Fast-LIO2에서 Scan Context 등으로 확장 가능).
+        
+    - 특징: 특징 추출 단계를 생략해 속도 향상, IMU로 강인성 확보.
+        
+- PIN-SLAM
+    
+    - 전처리: 동적 객체를 필터링하고 포인트 클라우드의 확률적 대응 계산.
+        
+    - 특징 추출: 특징 기반이 아닌 반복적 대응(Iterative Correspondence) 사용.
+        
+    - 최적화: 확률적 모델을 활용한 비선형 최적화로 정확도 향상.
+        
+    - 루프 클로저: 강력한 전역 일관성 유지를 위한 루프 탐지 포함.
+        
+    - 특징: 동적 환경과 장거리 드리프트에 강하며, 확률적 접근으로 안정성 확보.
+        
+
+---
+
+4. 성능 비교
+
+- 정확도
+    
+    - LeGO-LOAM: KITTI 데이터셋에서 평균 변환 오차 약 0.1~0.2m로 LOAM과 비슷한 수준. 지면이 있는 환경에서 우수하지만, 비지면 환경에서는 성능 저하.
+        
+    - Fast-LIO: KITTI 및 Mulran 데이터셋에서 평균 오차 0.1m 미만으로 더 높은 정확도. IMU 덕분에 동적 환경에서도 안정적.
+        
+    - PIN-SLAM: 최신 알고리즘으로, KITTI와 같은 공공 데이터셋에서 0.05~0.1m 수준의 오차를 보이며 동적 환경과 장거리에서 우수.
+        
+- 계산 효율성
+    
+    - LeGO-LOAM: NVIDIA Jetson TX2에서 10Hz 이상 실시간 처리 가능. 경량화로 저전력 시스템에 적합.
+        
+    - Fast-LIO: 20~30Hz로 더 빠르며, 특징 추출 생략으로 계산 부담 감소. 단, IMU 처리가 추가 리소스 소요.
+        
+    - PIN-SLAM: 반복적 대응과 루프 클로저로 인해 계산량이 많아 10~15Hz 수준. 고성능 하드웨어 권장.
+        
+- 강인성
+    
+    - LeGO-LOAM: 지면 의존성이 높아 계단, 공중 이동 등에서는 실패 가능성 있음.
+        
+    - Fast-LIO: IMU로 모션 보정 및 강인성 확보, 좁은 계단이나 터널에서도 안정적.
+        
+    - PIN-SLAM: 동적 객체와 드리프트에 강하며, 다양한 환경에서 일관된 성능.
+        
+
+---
+
+5. 적용 환경
+
+- LeGO-LOAM
+    
+    - 적합: 지상 차량(UGV), 평지 또는 완만한 지형.
+        
+    - 부적합: 공중 드론, 지면 없는 실내 환경.
+        
+- Fast-LIO
+    
+    - 적합: 고속 이동 로봇, 동적 환경(예: 도시, 실내).
+        
+    - 부적합: IMU가 없는 시스템.
+        
+- PIN-SLAM
+    
+    - 적합: 장거리 이동, 동적 객체가 많은 복잡한 환경(예: 도시, 공사 현장).
+        
+    - 부적합: 저전력 임베디드 시스템(계산량 많음).
+        
+
+---
+
+6. 장단점 요약
+
+- LeGO-LOAM
+    
+    - 장점: 경량화, 실시간 성능, 지상 차량에 최적화.
+        
+    - 단점: 지면 의존성, 루프 클로저 약함, 동적 환경 취약.
+        
+- Fast-LIO
+    
+    - 장점: 빠른 처리 속도, IMU로 강인성 확보, 실시간 응용 적합.
+        
+    - 단점: 루프 클로저 부재(기본 버전), IMU 필수.
+        
+- PIN-SLAM
+    
+    - 장점: 동적 환경과 장거리에서 우수, 높은 정확도와 전역 일관성.
+        
+    - 단점: 계산 비용 높음, 최신이라 실무 검증 부족.
+        
+
+---
+
+7. 결론
+
+- LeGO-LOAM은 저전력 시스템에서 지상 차량을 위한 간단하고 효율적인 솔루션을 제공합니다. 지면이 보장된 환경에서 비용 대비 성능이 뛰어납니다.
+    
+- Fast-LIO는 속도와 강인성을 중시하는 응용(예: 고속 로봇, 드론)에 적합하며, IMU를 활용해 동적 환경에서 안정적입니다.
+    
+- PIN-SLAM은 최신 기술로 복잡하고 동적인 환경에서 최고의 정확도와 일관성을 추구하지만, 계산 자원이 충분해야 효과를 발휘합니다.
+    
+
+사용 목적에 따라 선택이 달라질 수 있습니다:
+
+- 저비용/지상 차량: LeGO-LOAM.
+    
+- 실시간/동적 환경: Fast-LIO.
+    
+- 고정확도/복잡 환경: PIN-SLAM.
