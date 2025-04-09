@@ -1,0 +1,35 @@
+{
+	"nodes":[
+		{"id":"3b15a5dd2cbe6a21","type":"group","x":60,"y":-700,"width":400,"height":213,"label":"LOAM group"},
+		{"id":"407c262b8da0b3d7","type":"group","x":100,"y":40,"width":386,"height":174,"label":"LIO group"},
+		{"id":"c1b58611f9912ec4","type":"text","text":"Inertia Measurement","x":1120,"y":-77,"width":240,"height":50,"color":"3"},
+		{"id":"e15cee1498b50220","type":"text","text":"Semantic","x":1120,"y":17,"width":240,"height":60,"color":"3"},
+		{"id":"9c4442cd701e26a3","type":"text","text":"Factor Graph","x":840,"y":-350,"width":169,"height":60,"color":"2"},
+		{"id":"95a7e05cb3dc5874","type":"text","text":"Point Cloud","x":525,"y":-350,"width":169,"height":60,"color":"2"},
+		{"id":"72f1d84a41d5c1bf","type":"text","text":"Grid / Voxelized","x":100,"y":-344,"width":164,"height":60,"color":"2"},
+		{"id":"942a9229e518620d","type":"text","text":"Vision","x":1120,"y":111,"width":240,"height":50,"color":"3"},
+		{"id":"5d874ea18bd16738","type":"text","text":"Lego-LOAM","x":117,"y":-579,"width":136,"height":56},
+		{"id":"51e8d38d50d8bb39","type":"text","text":"LOAM","x":117,"y":-667,"width":136,"height":56},
+		{"id":"f212232649812d70","type":"text","text":"Fast-LOAM","x":280,"y":-667,"width":136,"height":56},
+		{"id":"6a9729e4b43262ea","type":"text","text":"Feature matching","x":-200,"y":-180,"width":200,"height":50,"color":"4"},
+		{"id":"8db76b52aae3ab15","type":"text","text":"LiDAR SLAM 구분","x":-560,"y":-184,"width":200,"height":50},
+		{"id":"e556d7f1124803d7","type":"text","text":"Filter SLAM","x":-200,"y":83,"width":200,"height":50,"color":"4"},
+		{"id":"afc8f87be552b13e","type":"text","text":"Cartographer","x":657,"y":-155,"width":183,"height":56},
+		{"id":"39941dfed45011f0","type":"text","text":"Fast-LIO2","x":120,"y":60,"width":136,"height":56},
+		{"id":"c5e6c9a24ce64fc4","type":"text","text":"Fast-LIVO","x":120,"y":138,"width":136,"height":56},
+		{"id":"0fcb03a201335b91","type":"text","text":"LTA-OM","x":293,"y":66,"width":147,"height":50},
+		{"id":"c81a12a5d0053adb","type":"text","text":"Faster-LIO","x":293,"y":138,"width":147,"height":50},
+		{"id":"7d4608f79bf81f61","x":280,"y":-579,"width":129,"height":60,"type":"text","text":"LIO-SAM"}
+	],
+	"edges":[
+		{"id":"87e2941320ab3739","fromNode":"6a9729e4b43262ea","fromSide":"right","toNode":"3b15a5dd2cbe6a21","toSide":"left"},
+		{"id":"333573ba1e2288c9","fromNode":"942a9229e518620d","fromSide":"left","toNode":"407c262b8da0b3d7","toSide":"right"},
+		{"id":"3f41e6f854b95e0b","fromNode":"72f1d84a41d5c1bf","fromSide":"bottom","toNode":"407c262b8da0b3d7","toSide":"top"},
+		{"id":"e8744fbd45aab036","fromNode":"e556d7f1124803d7","fromSide":"right","toNode":"407c262b8da0b3d7","toSide":"left"},
+		{"id":"cf665f9226650575","fromNode":"9c4442cd701e26a3","fromSide":"bottom","toNode":"afc8f87be552b13e","toSide":"top","color":"4"},
+		{"id":"2430c8cb161838a9","fromNode":"72f1d84a41d5c1bf","fromSide":"bottom","toNode":"afc8f87be552b13e","toSide":"top","color":"4"},
+		{"id":"4174598b25ce93aa","fromNode":"6a9729e4b43262ea","fromSide":"bottom","toNode":"afc8f87be552b13e","toSide":"left"},
+		{"id":"b13526ae2061cef1","fromNode":"95a7e05cb3dc5874","fromSide":"bottom","toNode":"3b15a5dd2cbe6a21","toSide":"bottom"},
+		{"id":"df826cbd36f0a083","fromNode":"c1b58611f9912ec4","fromSide":"left","toNode":"407c262b8da0b3d7","toSide":"right"}
+	]
+}
