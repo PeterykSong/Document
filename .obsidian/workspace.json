@@ -11,14 +11,30 @@
             "id": "d7ea544343db2b5d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
-                "mode": "source",
-                "source": false
+                "file": "Paper Review/신입생세미나/021_LIO SAM.pdf"
               },
-              "icon": "lucide-file",
-              "title": "Neuralangelo High-Fidelity Neural Surface Reconstruction"
+              "icon": "lucide-file-text",
+              "title": "021_LIO SAM"
+            }
+          }
+        ]
+      },
+      {
+        "id": "d83528477f73934d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8e38b74b06a23363",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "Paper Review/inDepth_review/LIO-SLAM next ucla.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "LIO-SLAM next ucla"
             }
           }
         ]
@@ -170,17 +186,18 @@
   },
   "active": "d7ea544343db2b5d",
   "lastOpenFiles": [
-    "Paper Review/신입생세미나/Neuralangelo.pptx",
-    "Paper Review/신입생세미나/052_3D Gaussian Splatting for Real-Time Radiance Field Rendering.pdf",
-    "Paper Review/신입생세미나/051_NeRF Representing Scenes as Neural Radiance Fields for View Synthesis.pdf",
-    "Paper Review/신입생세미나/043_graph-SLAM.pdf",
-    "Paper Review/신입생세미나/042_EKF_SLAM.pdf",
-    "Paper Review/신입생세미나/041_SLAM-tutorial-II.pdf",
-    "Paper Review/신입생세미나/041_SLAM-tutorial-I.pdf",
-    "Paper Review/신입생세미나/033_Direct Sparse Odometry.pdf",
-    "Paper Review/신입생세미나/032_SFM_Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.pdf",
-    "Paper Review/신입생세미나/031_ORB SLAM.pdf",
-    "Paper Review/신입생세미나/023_LOAM.pdf",
+    "Paper Review/신입생세미나/013_G-ICP.pdf",
+    "Paper Review/신입생세미나/122_Diffusion Policy.pdf",
+    "Paper Review/신입생세미나/091_Feature 3DGS Supercharging 3D Gaussian Splatting to Enable Distilled Feature Fields.pdf",
+    "Paper Review/신입생세미나/092_LERF Language Embedded Radiance Fields.pdf",
+    "Paper Review/신입생세미나/093_LangSplat 3D Language Gaussian Splatting.pdf",
+    "Paper Review/신입생세미나/093_LangSplat 3D Language Gaussian Splatting.pdf.crdownload",
+    "Paper Review/신입생세미나/092_LERF Language Embedded Radiance Fields.pdf.crdownload",
+    "Paper Review/신입생세미나/102_Legged Locomotion in Challenging Terrains using Egocentric Vision.pdf",
+    "Paper Review/신입생세미나/091_.pdf.crdownload",
+    "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf",
+    "Paper Review/신입생세미나/102_Legged Locomotion in Challenging Terrains_.pdf.crdownload",
+    "Paper Review/inDepth_review/mindmap.canvas",
     "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
     "Paper Review/Semantic/Untitled.md",
     "Untitled.canvas",

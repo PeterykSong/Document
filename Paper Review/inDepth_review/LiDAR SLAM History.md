@@ -38,7 +38,7 @@ Zhang, Ji & Singh, Sanjiv. (2014). LOAM: Lidar Odometry and Mapping in Real-time
 
 # Lio SAM
 Shan, Tixiao, et al. "Lio-sam: Tightly-coupled lidar inertial odometry via smoothing and mapping." _2020 IEEE/RSJ international conference on intelligent robots and systems (IROS)_. IEEE, 2020.
-[[021_LIO SLAM.pdf]]
+[[021_LIO SAM.pdf]]
 ### Key Point
 
 
