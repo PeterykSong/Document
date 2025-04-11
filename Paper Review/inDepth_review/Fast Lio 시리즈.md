@@ -37,3 +37,17 @@ iKF 에서 중요한 부분은 iteration의 반복 조건을 어떻게 설정할
 
 
 ![[Pasted image 20250401222205.png]]
+
+기존 것을 비교해보자. 
+
+![[Pasted image 20250401222245.png]]
+
+
+뭐... LOAM과 비교해서 Planar와 edge를 추출하는 건 똑같은데, 뭐가 다른거지..? 거의 같다고 한다. 
+
+그랬던 것이 Fast-LIO2 에서는 point를 직접 누적하여 사용한다고 한다. 
+Pose를 추정하기 위해서 Lie 그룹 연산을 하는건  기존과 동일하다. 
+
+![[Pasted image 20250411015132.png]]
+
+Input 에 보면 Fast-LIO에서는 LiDAR Feature point였던 것이 LiDAR Raw 포인트로바뀐걸 볼 수 있다. 
