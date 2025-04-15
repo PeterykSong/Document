@@ -18,8 +18,21 @@
               "icon": "lucide-file-text",
               "title": "021_LIO SAM"
             }
+          },
+          {
+            "id": "b62ffd4b24c72c66",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "Paper Review/Semantic/Learning Transferable Visual Models From Natural Language Supervision.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Learning Transferable Visual Models From Natural Language Supervision"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "d83528477f73934d",
@@ -31,10 +44,10 @@
             "state": {
               "type": "pdf",
               "state": {
-                "file": "Paper Review/inDepth_review/LIO-SLAM next ucla.pdf"
+                "file": "Paper Review/Semantic/ConceptFusion Open-set Multimodal 3D Mapping.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "LIO-SLAM next ucla"
+              "title": "ConceptFusion Open-set Multimodal 3D Mapping"
             }
           }
         ]
@@ -184,19 +197,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d7ea544343db2b5d",
+  "active": "b62ffd4b24c72c66",
   "lastOpenFiles": [
-    "Paper Review/신입생세미나/013_G-ICP.pdf",
-    "Paper Review/신입생세미나/122_Diffusion Policy.pdf",
-    "Paper Review/신입생세미나/091_Feature 3DGS Supercharging 3D Gaussian Splatting to Enable Distilled Feature Fields.pdf",
-    "Paper Review/신입생세미나/092_LERF Language Embedded Radiance Fields.pdf",
-    "Paper Review/신입생세미나/093_LangSplat 3D Language Gaussian Splatting.pdf",
-    "Paper Review/신입생세미나/093_LangSplat 3D Language Gaussian Splatting.pdf.crdownload",
-    "Paper Review/신입생세미나/092_LERF Language Embedded Radiance Fields.pdf.crdownload",
-    "Paper Review/신입생세미나/102_Legged Locomotion in Challenging Terrains using Egocentric Vision.pdf",
-    "Paper Review/신입생세미나/091_.pdf.crdownload",
-    "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf",
-    "Paper Review/신입생세미나/102_Legged Locomotion in Challenging Terrains_.pdf.crdownload",
+    "Paper Review/Semantic/Monocular Object and Plane SLAM in Structured Environments.pdf",
+    "Paper Review/Semantic/ConceptFusion Open-set Multimodal 3D Mapping.pdf",
+    "Paper Review/Semantic/ConceptGraphs Open-Vocabulary 3D Scene Graphs for Perception and Planning.pdf",
+    "Paper Review/Semantic/Collaborative Dynamic 3D Scene Graphs for Automated Driving.pdf",
+    "Paper Review/inDepth_review/062_PINSLAM.pdf",
+    "Paper Review/Semantic/Wang_Vision-and-Language_Navigation_via_Causal_Learning_CVPR_2024_paper.pdf",
+    "Paper Review/Semantic/SayPlan Grounding Large Language Models using.pdf",
+    "Paper Review/Semantic/Probabilistic_data_association_for_semantic_SLAM.pdf",
+    "Paper Review/Semantic/Open3DSG Open-Vocabulary 3D Scene Graphs from Point Clouds.pdf",
+    "Paper Review/Semantic/Learning Transferable Visual Models From Natural Language Supervision.pdf",
+    "Paper Review/Semantic/LANGUAGE-DRIVEN SEMANTIC SEGMENTATION.pdf",
     "Paper Review/inDepth_review/mindmap.canvas",
     "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
     "Paper Review/Semantic/Untitled.md",
