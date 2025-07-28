@@ -8,3 +8,6 @@
 .obsidian/plugins/obsidian-mind-map/main.js
 .obsidian/plugins/obsidian-mind-map/manifest.json
 .obsidian/workspace.json
+*.mp4
+.obsidian/workspace.json
+.obsidian/app.json
