@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "05a08d7838fd4eb2",
+        "id": "d83528477f73934d",
         "type": "tabs",
         "children": [
           {
-            "id": "d7ea544343db2b5d",
+            "id": "8e38b74b06a23363",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
-                "mode": "source",
-                "source": false
-              }
+                "file": "Lecture/Mathematics and Simulation for Robotics/Numerical_Analysis_ptostudy.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Numerical_Analysis_ptostudy"
+            }
+          },
+          {
+            "id": "2391543514430aa5",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.8.10"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.8.10"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -38,8 +51,11 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
-              }
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
             }
           },
           {
@@ -54,7 +70,9 @@
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "Search"
             }
           },
           {
@@ -62,7 +80,9 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
             }
           }
         ]
@@ -93,7 +113,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Neuralangelo High-Fidelity Neural Surface Reconstruction"
             }
           },
           {
@@ -105,7 +127,9 @@
                 "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Neuralangelo High-Fidelity Neural Surface Reconstruction"
             }
           },
           {
@@ -115,8 +139,12 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
-              }
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
             }
           },
           {
@@ -125,8 +153,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md"
-              }
+                "file": "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Neuralangelo High-Fidelity Neural Surface Reconstruction"
             }
           }
         ]
@@ -146,24 +179,27 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d7ea544343db2b5d",
+  "active": "2391543514430aa5",
   "lastOpenFiles": [
-    "Paper Review/신입생세미나/Neuralangelo.pptx",
-    "Paper Review/신입생세미나/052_3D Gaussian Splatting for Real-Time Radiance Field Rendering.pdf",
-    "Paper Review/신입생세미나/051_NeRF Representing Scenes as Neural Radiance Fields for View Synthesis.pdf",
-    "Paper Review/신입생세미나/043_graph-SLAM.pdf",
-    "Paper Review/신입생세미나/042_EKF_SLAM.pdf",
-    "Paper Review/신입생세미나/041_SLAM-tutorial-II.pdf",
-    "Paper Review/신입생세미나/041_SLAM-tutorial-I.pdf",
-    "Paper Review/신입생세미나/033_Direct Sparse Odometry.pdf",
-    "Paper Review/신입생세미나/032_SFM_Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.pdf",
-    "Paper Review/신입생세미나/031_ORB SLAM.pdf",
-    "Paper Review/신입생세미나/023_LOAM.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/midterm_exam.html",
+    "Lecture/Mathematics and Simulation for Robotics/Lecture_forward_kinematics.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/Lecture_physics_solver.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/Lecture_numerical_integrator.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/Numerical_Analysis_ptostudy.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/test.py",
+    "Lecture/Mathematics and Simulation for Robotics/midterm_exam.md",
+    "Lecture/Mathematics and Simulation for Robotics/전자책_로봇수학 및 시뮬레이션.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/HW2.pdf",
+    "Lecture/Mathematics and Simulation for Robotics/HW1.pdf",
+    "Paper Review/inDepth_review/FAST_LIVO2.pdf",
+    "Paper Review/Semantic/001_LERF Language Embedded Radiance Fields.pdf",
+    "2025-03-04.md",
+    "Paper Review/inDepth_review/3D Reconstruction.md",
+    "Paper Review/inDepth_review/mindmap.canvas",
     "Paper Review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
     "Paper Review/Semantic/Untitled.md",
     "Untitled.canvas",
     "해야할일들.md",
-    "2025-03-04.md",
     "Document/Paper review/신입생세미나/Neuralangelo High-Fidelity Neural Surface Reconstruction.md",
     "Document/Paper review/LERF Language Embedded Radiance Fields.md"
   ]
